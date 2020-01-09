@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<H1>Ask Mate</H1>
+
+<a href="{{ url_for('registration')}}">Registration</a>
+
+<table id="main_table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Submission Time</th>
+        <th>View number</th>
+        <th>Vote number</th>
+        <th>Title</th>
+        <th>Message</th>
+        <th>Image</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in question %}
+        <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.submission_time }}</td>
+            <td>{{ row.view_number }}</td>
+            <td>{{ row.vote_number }}</td>
+            <td>{{ row.title }}</td>
+            <td><div id="truncateLongTexts">{{ row.message }}</div> </td>
+            <td>{{ row.image }}</td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
