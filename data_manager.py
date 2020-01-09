@@ -8,13 +8,29 @@ def hash_password(plain_text_password):
     return hashed_bytes.decode('utf-8')
 
 
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
+@database_common.connection_handler
+def get_line(cursor,user_name):
+    cursor.execute('''
+                    SELECT user_name,password FROM users
+                    WHERE user_name = %(user_name)s
+    
+    ''',    {'user_name':user_name})
+    line = cursor.fetchall()
+    return line
+
+
 @database_common.connection_handler
 def check_username(cursor,user_name):
     cursor.execute('''
                 SELECT count(*) as num  FROM users
                 WHERE user_name = %(user_name)s    
     
-    ''',   {"user_name":user_name})
+    ''',   {"user_name": user_name})
 
     result = cursor.fetchall()
     return result

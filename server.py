@@ -6,21 +6,25 @@ app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
-
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method=='POST':
+        username = request.form.get('user_name')
+        password = request.form.get("password")
+        check_line = data_manager.get_line(username)
+        print(check_line)
+
+        return redirect('/list')
     session.pop('user_name', None)
     print(session)
     questions = data_manager.get_five_question()
+    print(questions)
     return render_template('index.html', question=questions)
 
 
 @app.route('/list')
 def list():
     return render_template('list.html')
-
-
-
 
 
 @app.route('/registration', methods=['GET', 'POST'])
