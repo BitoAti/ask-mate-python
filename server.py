@@ -16,9 +16,14 @@ def registration():
     if request.method == 'POST':
         username = request.form.get('user_name')
         password = request.form.get("password")
+        print(username)
+        result = data_manager.check_username(username)
+        print(result, type(result[0]))
 
-        hashed_pw = data_manager.hash_password(password)
-        data_manager.save_user_data(username,hashed_pw)
+        if result.num > 0:
+            print("22222222222")
+            hashed_pw = data_manager.hash_password(password)
+            data_manager.save_user_data(username,hashed_pw)
         return redirect(url_for('/'))
     return render_template('registration.html')
 

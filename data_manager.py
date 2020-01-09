@@ -9,6 +9,19 @@ def hash_password(plain_text_password):
 
 
 @database_common.connection_handler
+def check_username(cursor,user_name):
+    cursor.execute('''
+                SELECT count(*) as num  FROM users
+                WHERE user_name = %(user_name)s    
+    
+    ''',   {"user_name":user_name})
+
+    result = cursor.fetchall()
+    return result
+
+
+
+@database_common.connection_handler
 def save_user_data(cursor, user_name, password):
     cursor.execute('''
                 INSERT INTO users (user_name, password)
