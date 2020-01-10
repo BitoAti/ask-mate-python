@@ -57,6 +57,31 @@ def get_five_question(cursor):
     question = cursor.fetchall()
     return question
 
+@database_common.connection_handler
+def get_all_question(cursor):
+
+    cursor.execute(f"""
+    SELECT * FROM question
+     """)
+    questions = cursor.fetchall()
+    return questions
 
 
+@database_common.connection_handler
+def add_new_question(cursor, new_question):
+    cursor.execute('''
+    INSERT into question(view_number,vote_number,title,message,submission_time,user_id) VALUES %(new_question)s
+
+    ''', {"new_question": new_question})
+
+
+@database_common.connection_handler
+def get_user_id(cursor,user_name):
+    cursor.execute('''
+                    SELECT user_id FROM users
+                    where user_name = %(user_name)s
+    
+    ''',      {"user_name":user_name})
+    user_id = cursor.fetchall()
+    return user_id
 

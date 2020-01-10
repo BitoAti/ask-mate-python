@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+<h1>
+    Add new question!
+</h1>
+
+
+<form action="" method="POST" class="form">
+    <p>
+        <label for="title">Title:</label><br>
+        <textarea rows="1" cols="15" name="title" id="title" required></textarea>
+
+    </p>
+    <p>
+        <label for="message">New question:</label><br>
+        <textarea name="message" rows="20" cols="50" id="message"></textarea>
+    </p>
+    <button class="subbutton" type="submit">Submit question</button>
+</form>
+<p></p>
+<a href="/list">Back to questions</a>
+
+{% endblock %}

@@ -4,6 +4,7 @@ import data_manager
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+from time import gmtime, strftime
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -35,11 +36,17 @@ def enter_as_visitor():
 
 @app.route('/list')
 def list(user_name):
-    if session["type"] == "visitor":
-        print("visitor")
-    if session["type"] == "user":
-        print("user")
-    return render_template('list.html', user_name = session["user_name"])
+    question = data_manager.get_all_question()
+
+    """
+    column = request.args.get("order_by")
+    direction = request.args.get("direction")
+    if column == None:
+        column = "message"
+        direction = "ASC"
+    question = data_manager.get_all_question(column, direction)
+    """
+    return render_template('list.html', user_name = session["user_name"],question=question)
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -68,6 +75,25 @@ def logout():
 @app.route('/my_profile')
 def my_profile():
     return render_template("my_profile.html")
+
+
+@app.route("/add-question", methods=['POST', 'GET'])
+def add_question():
+    new_question = ()
+
+    if request.method == 'POST':
+        new_question += (0,)
+        new_question += (0,)
+        new_question += (request.form.get('title'),)
+        new_question += (request.form.get('message'),)
+        new_question += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
+        list_of_id = data_manager.get_user_id(session["user_name"])
+        user_row = list_of_id[0]
+        new_question += (user_row["user_id"],)
+        data_manager.add_new_question(new_question)
+        return list(session["user_name"])
+    return render_template("add_question.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
