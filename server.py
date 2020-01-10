@@ -39,7 +39,7 @@ def list(user_name):
         print("visitor")
     if session["type"] == "user":
         print("user")
-    return render_template('list.html')
+    return render_template('list.html', user_name = session["user_name"])
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -57,6 +57,17 @@ def registration():
             return redirect(url_for('registration'))
     return render_template('registration.html')
 
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
+
+@app.route('/my_profile')
+def my_profile():
+    return render_template("my_profile.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -8,10 +8,15 @@
 </head>
 <body>
 <H1>LIST</H1>
+
+{% if session["type"] == "user" %}
+<a href="{{ url_for('logout')}}">Log out</a>
+<a href="{{ url_for('my_profile')}}">My profile</a>
+{% endif %}
 {%    if session["type"] == "visitor": %}
        <p>VISITOR</p>
 {%    elif session["type"] == "user":  %}
-       <p>USER</p>
+       {{user_name}}
 {% endif %}
 
 
