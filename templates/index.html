@@ -4,14 +4,16 @@
 <H1>Ask Mate</H1>
 
 <a href="{{ url_for('registration')}}">Registration</a>
-<a href="{{ url_for('list')}}">Enter without registration</a>
+<a href="{{url_for('enter_as_visitor')}}">Enter without registration</a>
+
 <br>
     <form action="" method="POST" class="form">
         <p>User name</p>
-        <label for="user_name"></label><input name="user_name" id="user_name" required>
+        <label for="user_name"></label><input name="user_name" id="user_name">
         <p>Password</p>
-        <label for="password"></label><input type='password' name="password" id="password" required>
+        <label for="password"></label><input type='password' name="password" id="password">
         <button class="button" type="submit">Submit question</button>
+
 
 
 <table id="main_table">

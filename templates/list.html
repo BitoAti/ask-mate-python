@@ -1,52 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="/static/style3.css">
 
 
     <meta charset="UTF-8">
     <title>AskMate </title>
 </head>
 <body>
-<h1>AskMate</h1>
-<div class="ques">
-<table class="table">
-
-    <thead>
-    <tr>
-
-        <th><a href="{{ url_for('list', order_by = "id", direction = "ASC") }}">Id</a></th>
-        <th><a href="{{ url_for('list', order_by = "submission_time", direction = "ASC") }}">Submission time</a></th>
-        <th><a href="{{ url_for('list', order_by = "view_number", direction = "ASC") }}">View number</a></th>
-        <th><a href="{{ url_for('list', order_by = "vote_number", direction = "ASC") }}">Vote number</a></th>
-        <th><a href="{{ url_for('list', order_by = "title", direction = "ASC") }}">Title</a></th>
-        <th><a href="{{ url_for('list', order_by = "message", direction = "ASC") }}">Message</a></th>
-        <th>Image</th>
-
-    </tr>
-    </thead>
-    <tbody>
-    {% for row in question %}
-
-        <tr>
-
-            <td>{{ row.id }}</td>
-            <td>{{ row.submission_time }}</td>
-            <td>{{ row.view_number }}</td>
-            <td>{{ row.vote_number }}</td>
-            <td><a href="{{ url_for("display_question", question_id = row.id) }}">{{ row.title }}</a></td>
-            <td>    {{ row.message }} </td>
-            <td>{{ row.image }}</td>
-
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</div>
-
-
-<p class="button"><a href="{{ url_for("ask_something") }}"> Ask something </a></p>
-<p class="button"><a href="/">Back to main</a></p>
+<H1>LIST</H1>
+{%    if session["type"] == "visitor": %}
+       <p>VISITOR</p>
+{%    elif session["type"] == "user":  %}
+       <p>USER</p>
+{% endif %}
 
 
 </body>

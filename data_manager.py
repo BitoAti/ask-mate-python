@@ -14,7 +14,7 @@ def verify_password(plain_text_password, hashed_password):
 
 
 @database_common.connection_handler
-def get_line(cursor,user_name):
+def get_line(cursor, user_name):
     cursor.execute('''
                     SELECT user_name,password FROM users
                     WHERE user_name = %(user_name)s

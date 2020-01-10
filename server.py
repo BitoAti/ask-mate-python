@@ -8,22 +8,37 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method=='POST':
+    if request.method == 'POST':
         username = request.form.get('user_name')
         password = request.form.get("password")
-        check_line = data_manager.get_line(username)
-        print(check_line)
-
-        return redirect('/list')
+        result_list = data_manager.get_line(username)
+        if len(result_list) != 1:
+            return redirect('/')
+        user_row = result_list[0]
+        if not data_manager.verify_password(password, user_row['password']):
+            return redirect('/')
+        session["user_name"] = username
+        session["type"] = "user"
+        return list(username)
     session.pop('user_name', None)
-    print(session)
     questions = data_manager.get_five_question()
-    print(questions)
     return render_template('index.html', question=questions)
 
 
+@app.route('/visitor')
+def enter_as_visitor():
+    user_name = "visitor"
+    session["user_name"] = "visitor"
+    session["type"] = "visitor"
+    return list(user_name)
+
+
 @app.route('/list')
-def list():
+def list(user_name):
+    if session["type"] == "visitor":
+        print("visitor")
+    if session["type"] == "user":
+        print("user")
     return render_template('list.html')
 
 
@@ -33,11 +48,11 @@ def registration():
         username = request.form.get('user_name')
         password = request.form.get("password")
         hashed_pw = data_manager.hash_password(password)
-
         try:
             data_manager.save_user_data(username,hashed_pw)
             session["user_name"] = username
-            return redirect('/list')
+            session["type"] = "user"
+            return list(username)
         except:
             return redirect(url_for('registration'))
     return render_template('registration.html')
