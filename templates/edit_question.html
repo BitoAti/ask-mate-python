@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <meta charset="UTF-8">
+    <title>AskMate</title>
+</head>
+<body>
+<h1>
+    Edit the question!
+</h1>
+{% for item in question_to_edit %}
+
+    <form action="" method="POST" class="form">
+        <p>
+            <label for="title">Title:</label><br>
+            <textarea rows="1" cols="15" name="title" id="title" required>{{ item.title }}</textarea>
+
+        </p>
+        <p>
+            <label for="message">New answer:</label><br>
+            <textarea name="message" rows="20" cols="50" id="message">{{ item.message }}</textarea>
+        </p>
+        <button class="subbutton" type="submit">Submit your edited version</button>
+    </form>
+<p></p>
+<a href=" {{ url_for('display_question', question_id = item.id)}} ">Back to question</a>
+
+{% endfor %}
+</body>
+</html>

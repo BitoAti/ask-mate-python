@@ -13,8 +13,8 @@
     <p>{{ item.message }}</p>
 
 
-        <a href="{{ url_for("question_vote_up", question_id = item.id) }}">UP</a>
-        <a href="{{ url_for("question_vote_down", question_id = item.id) }}">DOWN</a>
+        <a href="{{ url_for('question_vote_up', question_id = item.id) }}">UP</a>
+        <a href="{{ url_for('question_vote_down', question_id = item.id) }}">DOWN</a>
 
 
         <p>Vote number: {{ item.vote_number }}
@@ -32,7 +32,11 @@
         <td>{{ item.message }}</td>
         <td>{{ item.vote_number }}</td>
         <td>{{ item.submission_time }} </td>
-        <td><a href="{{ url_for("delete_answer", question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
+            <td><a href="{{ url_for('answer_vote_up', question_id = item.question_id, answer_id = item.id) }}">Vote up</a></td>
+        <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a></td>
+
+        <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
+        <td><a href="{{ url_for('edit_answer',answer_id = item.id) }}">Edit answer</a></td>
 
             {% endfor %}
 
@@ -44,7 +48,7 @@
 
 <div class="link">
 {% for item in question %}
-<a href="{{ url_for("edit_question", question_id = item.id )}}">Edit question</a>
+<a href="{{ url_for('edit_question', question_id = item.id )}}">Edit question</a>
 {% endfor %}
 
 {% for item in question%}

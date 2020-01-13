@@ -57,11 +57,13 @@ def get_five_question(cursor):
     question = cursor.fetchall()
     return question
 
+
 @database_common.connection_handler
-def get_all_question(cursor):
+def get_all_question(cursor, column="id", direction="DESC"):
 
     cursor.execute(f"""
     SELECT * FROM question
+    ORDER BY {column} {direction}
      """)
     questions = cursor.fetchall()
     return questions
@@ -98,7 +100,7 @@ def get_question(cursor, q_id):
 
 
 @database_common.connection_handler
-def get_answer(cursor, q_id):
+def get_answers(cursor, q_id):
     cursor.execute('''
     SELECT * FROM answer 
     WHERE question_id = %(q_id)s
@@ -142,3 +144,80 @@ def write_edited_question(cursor, new_title, new_message, question_id):
     ''',
                    {"new_title": new_title, "new_message": new_message, "question_id": question_id})
 
+
+@database_common.connection_handler
+def delete_one_answer(cursor, answer_id):
+    cursor.execute('''
+    DELETE from answer
+    WHERE id = %(answer_id)s
+    ''',
+                   {"answer_id": answer_id})
+
+@database_common.connection_handler
+def question_vote_up(cursor, question_id):
+    cursor.execute('''
+    UPDATE question 
+    SET vote_number = vote_number+1
+    WHERE id = %(question_id)s
+    ''',
+                   {"question_id": question_id})
+
+@database_common.connection_handler
+def question_vote_down(cursor, question_id):
+    cursor.execute('''
+    UPDATE question 
+    SET vote_number = vote_number-1
+    WHERE id = %(question_id)s
+    ''',
+                   {"question_id": question_id})
+
+@database_common.connection_handler
+def answer_vote_up(cursor, answer_id):
+    cursor.execute('''
+    UPDATE answer 
+    SET vote_number = vote_number+1
+    WHERE id = %(answer_id)s
+    ''',
+                   {"answer_id": answer_id})
+
+
+
+@database_common.connection_handler
+def answer_vote_down(cursor, answer_id):
+    cursor.execute('''
+    UPDATE answer 
+    SET vote_number = vote_number-1
+    WHERE id = %(answer_id)s
+    ''',
+                   {"answer_id": answer_id})
+
+
+@database_common.connection_handler
+def get_question_id(cursor, answer_id):
+    cursor.execute('''
+                    SELECT question_id FROM answer
+                    where id = %(answer_id)s
+
+    ''', {"answer_id":answer_id})
+    question_id = cursor.fetchall()
+    return question_id
+
+
+@database_common.connection_handler
+def edit_answer(cursor, new_message, answer_id):
+    cursor.execute('''
+    UPDATE answer
+    SET message = %(new_message)s
+    WHERE id= %(answer_id)s
+    ''',
+                   {"new_message": new_message, "answer_id": answer_id})
+
+@database_common.connection_handler
+def get_one_answer(cursor, answer_id):
+    cursor.execute('''
+                    SELECT message FROM answer
+                    WHERE id = %{answer_id}s
+    
+    ''',       {"answer_id":answer_id})
+    answer = cursor.fetchall()
+    return answer

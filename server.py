@@ -22,42 +22,34 @@ def index():
             return redirect('/')
         session["user_name"] = username
         session["type"] = "user"
-        return list(username)
+        return list()
     session.pop('user_name', None)
     questions = data_manager.get_five_question()
     return render_template('index.html', question=questions)
 
 
 def login_as_test():
-    username = "test"
-    password = "test"
     session["user_name"] = "test"
     session["type"] = "user"
-    return list(username)
-
+    return list()
 
 
 @app.route('/visitor')
 def enter_as_visitor():
-    user_name = "visitor"
     session["user_name"] = "visitor"
     session["type"] = "visitor"
-    return redirect("/list", user_name=list(user_name))
+    return redirect("/list")
 
 
 @app.route('/list')
-def list(user_name):
-    question = data_manager.get_all_question()
-
-    """
+def list():
     column = request.args.get("order_by")
     direction = request.args.get("direction")
     if column == None:
         column = "message"
         direction = "ASC"
     question = data_manager.get_all_question(column, direction)
-    """
-    return render_template('list.html', user_name = session["user_name"],question=question)
+    return render_template("list.html", question=question)
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -102,14 +94,14 @@ def add_question():
         user_row = list_of_id[0]
         new_question += (user_row["user_id"],)
         data_manager.add_new_question(new_question)
-        return list(session["user_name"])
+        return redirect("/list")
     return render_template("add_question.html")
 
 
 @app.route("/display_question/<question_id>")
 def display_question(question_id):
     question = data_manager.get_question(question_id)
-    answer = data_manager.get_answer(question_id)
+    answer = data_manager.get_answers(question_id)
     return render_template("display_question.html", question=question, answer=answer)
 
 
@@ -131,16 +123,16 @@ def add_answer(question_id):
 def delete_question(question_id):
     data_manager.delete_all_answer(int(question_id))
     data_manager.delete_question(int(question_id))
-    return redirect('/list', user_name=session["user_name"])
+    return redirect('/list')
 
 
 @app.route('/question/<question_id>/edit', methods=['POST', 'GET'])
 def edit_question(question_id):
-    new_title = ()
-    new_message = ()
     question_to_edit = data_manager.get_question(question_id)
-    print(question_to_edit)
+
     if request.method == 'POST':
+        new_title = ()
+        new_message = ()
         new_title += (request.form.get('title'),)
         new_message += (request.form.get('message'),)
         data_manager.write_edited_question(new_title, new_message, question_id)
@@ -148,14 +140,55 @@ def edit_question(question_id):
     return render_template('edit_question.html', question_to_edit=question_to_edit)
 
 
+@app.route('/answer/<answer_id>/edit', methods=['POST', 'GET'])
+def edit_answer(answer_id):
+    answer_to_edit = data_manager.get_one_answer(answer_id)
+
+    if request.method == 'POST':
+        new_answer = (request.form.get('ans'),)
+        data_manager.edit_answer(new_answer)
+        result = data_manager.get_question_id(answer_id)
+        print(result)
+        res = result[0]
+        question_id = res["question_id"]
+        return redirect(url_for('display_question', question_id=question_id, ))
+    return render_template('edit_answer.html', answer_to_edit=answer_to_edit)
+
+
 @app.route('/display_question/<question_id>/question_vote_up')
 def question_vote_up(question_id):
-    pass
+    data_manager.question_vote_up(question_id)
+    return redirect(url_for('display_question', question_id=question_id, ))
 
 
 @app.route('/display_question/<question_id>/question_vote_down')
 def question_vote_down(question_id):
-    pass
+    data_manager.question_vote_down(question_id)
+    return redirect(url_for('display_question', question_id=question_id, ))
+
+
+@app.route('/display_question/<question_id>/delete_answer/<answer_id>')
+def delete_answer(question_id, answer_id):
+    data_manager.delete_one_answer(int(answer_id))
+    print(question_id)
+    return redirect(url_for('display_question', question_id=question_id))
+
+@app.route('/answer/<answer_id>/vote_up')
+def answer_vote_up(answer_id):
+    data_manager.answer_vote_up(answer_id)
+    result = data_manager.get_question_id(answer_id)
+    print(result)
+    res = result[0]
+    question_id = res["question_id"]
+    return redirect(url_for('display_question', question_id=question_id ))
+
+@app.route('/answer/<answer_id>/vote_down')
+def answer_vote_down(answer_id):
+    data_manager.answer_vote_down(answer_id)
+    result = data_manager.get_question_id(answer_id)
+    res = result[0]
+    question_id = res["question_id"]
+    return redirect(url_for('display_question', question_id=question_id ))
 
 
 if __name__ == '__main__':
