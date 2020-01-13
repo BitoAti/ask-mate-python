@@ -32,8 +32,6 @@
         <td>{{ item.message }}</td>
         <td>{{ item.vote_number }}</td>
         <td>{{ item.submission_time }} </td>
-        <!--<td><a href="{{ url_for("answer_vote_upp", answer_id = item.id, question_id = item.question_id) }}">UP</a></td>
-        <td> <a href="{{ url_for("answer_vote_downn", answer_id = item.id, question_id = item.question_id) }}">DOWN</a></td>-->
         <td><a href="{{ url_for("delete_answer", question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
 
             {% endfor %}

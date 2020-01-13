@@ -108,9 +108,39 @@ def add_question():
 
 @app.route("/display_question/<question_id>")
 def display_question(question_id):
-    return render_template("display_question.html")
+    question = data_manager.get_question(question_id)
+    answer = data_manager.get_answer(question_id)
+    return render_template("display_question.html", question=question, answer=answer)
 
 
+@app.route('/display_question/<question_id>/add_answer', methods=['POST', 'GET'])
+def add_answer(question_id):
+    new_answer = ()
+    if request.method == 'POST':
+        new_answer += (0,)
+        new_answer += (question_id,)
+        new_answer += (request.form.get('ans'),)
+        new_answer += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
+        data_manager.add_new_answer(new_answer)
+        print(question_id)
+        return redirect(url_for('display_question', question_id=question_id))
+    return render_template('add_answer.html', question_id=question_id)
+
+
+@app.route('/display_question/<question_id>/delete_question')
+def delete_question(question_id):
+    return render_template("delete_answer.html")
+
+
+@app.route('/question/<question_id>/edit', methods=['POST', 'GET'])
+def edit_question(question_id):
+    return render_template("edit_answer.html")
+@app.route('/display_question/<question_id>/question_vote_up')
+def question_vote_up(question_id):
+    pass
+@app.route('/display_question/<question_id>/question_vote_down')
+def question_vote_down(question_id):
+    pass
 
 
 if __name__ == '__main__':

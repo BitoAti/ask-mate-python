@@ -85,3 +85,32 @@ def get_user_id(cursor,user_name):
     user_id = cursor.fetchall()
     return user_id
 
+
+@database_common.connection_handler
+def get_question(cursor, q_id):
+    cursor.execute('''
+    SELECT * FROM question 
+    WHERE id = %(q_id)s
+     ''',
+                   {"q_id": q_id})
+    question = cursor.fetchall()
+    return question
+
+
+@database_common.connection_handler
+def get_answer(cursor, q_id):
+    cursor.execute('''
+    SELECT * FROM answer 
+    WHERE question_id = %(q_id)s
+     ''',
+                   {"q_id": q_id})
+
+    answer = cursor.fetchall()
+    return answer
+
+@database_common.connection_handler
+def add_new_answer(cursor, new_answer):
+    cursor.execute('''
+    INSERT into answer(vote_number,question_id, message,submission_time) VALUES %(new_answer)s
+
+    ''', {"new_answer": new_answer})
