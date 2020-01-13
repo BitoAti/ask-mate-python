@@ -129,15 +129,30 @@ def add_answer(question_id):
 
 @app.route('/display_question/<question_id>/delete_question')
 def delete_question(question_id):
-    return render_template("delete_answer.html")
+    data_manager.delete_all_answer(int(question_id))
+    data_manager.delete_question(int(question_id))
+    return redirect('/list', user_name=session["user_name"])
 
 
 @app.route('/question/<question_id>/edit', methods=['POST', 'GET'])
 def edit_question(question_id):
-    return render_template("edit_answer.html")
+    new_title = ()
+    new_message = ()
+    question_to_edit = data_manager.get_question(question_id)
+    print(question_to_edit)
+    if request.method == 'POST':
+        new_title += (request.form.get('title'),)
+        new_message += (request.form.get('message'),)
+        data_manager.write_edited_question(new_title, new_message, question_id)
+        return redirect(url_for("display_question", question_id=question_id))
+    return render_template('edit_question.html', question_to_edit=question_to_edit)
+
+
 @app.route('/display_question/<question_id>/question_vote_up')
 def question_vote_up(question_id):
     pass
+
+
 @app.route('/display_question/<question_id>/question_vote_down')
 def question_vote_down(question_id):
     pass

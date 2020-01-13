@@ -114,3 +114,31 @@ def add_new_answer(cursor, new_answer):
     INSERT into answer(vote_number,question_id, message,submission_time) VALUES %(new_answer)s
 
     ''', {"new_answer": new_answer})
+
+
+@database_common.connection_handler
+def delete_question(cursor, question_id):
+    cursor.execute('''
+    DELETE from question
+    WHERE id = %(question_id)s
+    ''',
+                   {"question_id": question_id})
+
+@database_common.connection_handler
+def delete_all_answer(cursor, question_id):
+    cursor.execute('''
+    DELETE from answer
+    WHERE question_id = %(question_id)s
+    ''',
+               {"question_id": question_id})
+
+
+@database_common.connection_handler
+def write_edited_question(cursor, new_title, new_message, question_id):
+    cursor.execute('''
+    UPDATE question
+    SET title = %(new_title)s, message= %(new_message)s
+    WHERE id= %(question_id)s
+    ''',
+                   {"new_title": new_title, "new_message": new_message, "question_id": question_id})
+
