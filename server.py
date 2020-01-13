@@ -42,7 +42,7 @@ def enter_as_visitor():
     user_name = "visitor"
     session["user_name"] = "visitor"
     session["type"] = "visitor"
-    return list(user_name)
+    return redirect("/list", user_name=list(user_name))
 
 
 @app.route('/list')
@@ -104,6 +104,13 @@ def add_question():
         data_manager.add_new_question(new_question)
         return list(session["user_name"])
     return render_template("add_question.html")
+
+
+@app.route("/display_question/<question_id>")
+def display_question(question_id):
+    return render_template("display_question.html")
+
+
 
 
 if __name__ == '__main__':
