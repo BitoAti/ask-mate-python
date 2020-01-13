@@ -1,4 +1,4 @@
-import app as app
+
 from flask import Flask, session, redirect, url_for, escape, request, make_response, render_template, redirect, request, url_for
 import data_manager
 
@@ -9,6 +9,8 @@ from time import gmtime, strftime
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    return login_as_test()
+
     if request.method == 'POST':
         username = request.form.get('user_name')
         password = request.form.get("password")
@@ -24,6 +26,15 @@ def index():
     session.pop('user_name', None)
     questions = data_manager.get_five_question()
     return render_template('index.html', question=questions)
+
+
+def login_as_test():
+    username = "test"
+    password = "test"
+    session["user_name"] = "test"
+    session["type"] = "user"
+    return list(username)
+
 
 
 @app.route('/visitor')
