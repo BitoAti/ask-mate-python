@@ -22,6 +22,13 @@
 
 
     </div>
+{% endfor%}
+
+{% for line in question %}
+
+
+<a href="{{url_for('add_comment_to_question', question_id = line.id)}}">Add comment</a>
+
 {% endfor %}
 <h1>Answer</h1>
 <div class="qstion">
@@ -32,6 +39,12 @@
         <td>{{ item.message }}</td>
         <td>{{ item.vote_number }}</td>
         <td>{{ item.submission_time }} </td>
+
+
+
+            <a href="{{url_for('add_comment_to_answer', answer_id = item.id)}}">Add comment</a>
+
+
             <td><a href="{{ url_for('answer_vote_up', question_id = item.question_id, answer_id = item.id) }}">Vote up</a></td>
         <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a></td>
 

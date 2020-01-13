@@ -41,8 +41,12 @@ def enter_as_visitor():
     return redirect("/list")
 
 
-@app.route('/list')
+@app.route('/list', methods=['GET', 'POST'])
 def list():
+    if request.method == 'POST':
+        word_for_search = request.form.get("search_phrase")
+        print(word_for_search)
+        return redirect(url_for("result", search_phrase = word_for_search))
     column = request.args.get("order_by")
     direction = request.args.get("direction")
     if column == None:
@@ -143,10 +147,10 @@ def edit_question(question_id):
 @app.route('/answer/<answer_id>/edit', methods=['POST', 'GET'])
 def edit_answer(answer_id):
     answer_to_edit = data_manager.get_one_answer(answer_id)
-
+    print(answer_to_edit)
     if request.method == 'POST':
         new_answer = (request.form.get('ans'),)
-        data_manager.edit_answer(new_answer)
+        data_manager.edit_answer(new_answer, answer_id)
         result = data_manager.get_question_id(answer_id)
         print(result)
         res = result[0]
@@ -189,6 +193,38 @@ def answer_vote_down(answer_id):
     res = result[0]
     question_id = res["question_id"]
     return redirect(url_for('display_question', question_id=question_id ))
+
+
+@app.route('/search?q=<search_phrase>')
+def result(search_phrase):
+    word = "%" + search_phrase + "%"
+    print(word)
+    questions = data_manager.get_result_q(word)
+    answer = data_manager.get_result_a(word)
+    print(questions)
+    return render_template('result.html', questions=questions, answer=answer)
+
+
+@app.route('/question/<question_id>/new-comment', methods=['POST', 'GET'])
+def add_comment_to_question(question_id):
+    if request.method == "POST":
+        comment = ()
+        comment += (question_id,)
+        comment += (request.form.get("question_comment"),)
+        comment += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
+        us_id = data_manager.get_user_id(session["user_name"])
+        u_id = us_id[0]
+        comment += (u_id["user_id"],)
+        data_manager.add_question_comment(comment)
+        return redirect( url_for("display_question", question_id=question_id))
+    return render_template("comment_question.html")
+
+
+@app.route('/question/<answer_id>/new-comment', methods=['POST', 'GET'])
+def add_comment_to_answer(answer_id):
+    if request.method == "POST":
+        pass
+    return render_template("comment_answer.html")
 
 
 if __name__ == '__main__':

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% for line in questions%}
+<p>{{ line }}</p>
+{% endfor %}
+{% for line in answer %}
+<p>{{ line }}</p>
+{% endfor %}
+
+<a href=" {{ url_for('list')}} ">Back to questions</a>
+
+{% endblock %}

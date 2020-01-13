@@ -52,7 +52,7 @@ def get_five_question(cursor):
     cursor.execute('''
     SELECT * FROM question
     ORDER BY id DESC 
-    LIMIT 5
+    LIMIT 5users_user_name_uindex
      ''')
     question = cursor.fetchall()
     return question
@@ -212,12 +212,48 @@ def edit_answer(cursor, new_message, answer_id):
     ''',
                    {"new_message": new_message, "answer_id": answer_id})
 
+
 @database_common.connection_handler
 def get_one_answer(cursor, answer_id):
     cursor.execute('''
-                    SELECT message FROM answer
-                    WHERE id = %{answer_id}s
+                    SELECT * FROM answer
+                    WHERE id = %(answer_id)s
     
-    ''',       {"answer_id":answer_id})
+    ''',
+                   {"answer_id": answer_id})
     answer = cursor.fetchall()
     return answer
+
+
+@database_common.connection_handler
+def get_result_q(cursor, search_phrase):
+    cursor.execute('''
+                    SELECT * FROM question
+    
+                    WHERE upper(title) like upper(%(search_phrase)s) or lower(message) like lower(%(search_phrase)s)
+    
+    ''',   {"search_phrase":search_phrase})
+    result = cursor.fetchall()
+    return result
+
+
+@database_common.connection_handler
+def get_result_a(cursor, search_phrase):
+    cursor.execute('''
+                    SELECT * FROM answer
+
+                    WHERE lower(message) like lower(%(search_phrase)s)
+
+    ''', {"search_phrase": search_phrase})
+    result = cursor.fetchall()
+    return result
+
+
+@database_common.connection_handler
+def add_question_comment(cursor, comment):
+    print(comment)
+    cursor.execute(''' 
+                    INSERT INTO comment(question_id, message, submission_time, user_id)
+                    VALUES %(comment)s
+                    
+    ''',      {"comment":comment})

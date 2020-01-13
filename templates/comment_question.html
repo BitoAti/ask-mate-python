@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>AskMate</title>
+</head>
+<body>
+<form action="" method="post" class="form">
+    <h2>Here you can add a new comment</h2>
+    <p>
+        <label id="question_comment"></label>
+        <textarea rows="25" cols="50" name="question_comment" placeholder="Type your comment" required></textarea>
+    </p>
+
+    <button class="subbutton" type="submit">Submit your comment</button>
+
+</form>
+<p></p>
+<a href=" {{ url_for('display_question', question_id = question_id)}} ">Back to question</a>
+
+
+</body>
+</html>

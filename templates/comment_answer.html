@@ -7,19 +7,16 @@
     <title>AskMate</title>
 </head>
 <body>
-{%for line in answer_to_edit%}
 <form action="" method="post" class="form">
     <h2>Here you can add a new answer</h2>
     <p>
         <label title="ans" id="addanswer"></label>
-        <textarea name="ans" rows="25" cols="50" id="addanswer" placeholder="Type your answer" required>{{line.message}}</textarea>
+        <textarea name="ans" rows="25" cols="50" id="addanswer" placeholder="Type your answer" required></textarea>
     </p>
 
     <button class="subbutton" type="submit">Submit your answer</button>
 
 </form>
-
-{% endfor %}
 <p></p>
 <a href=" {{ url_for('display_question', question_id = question_id)}} ">Back to question</a>
 
