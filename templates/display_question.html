@@ -54,6 +54,13 @@
             <td><a href="{{ url_for('edit_answer',answer_id = item.id) }}">Edit answer</a></td>
             <td><a href="{{url_for('add_comment_to_answer', answer_id = item.id)}}">Add comment</a></td>
 
+            {% for line in answer_comments %}
+
+            <td>{{ line.message }}</td>
+
+            {% endfor %}
+
+
             {% endfor %}
 
         </tr>

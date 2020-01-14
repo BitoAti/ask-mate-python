@@ -380,3 +380,11 @@ def get_my_comments(cursor, name):
     ''', {"name": name})
     my_data = cursor.fetchall()
     return my_data
+
+
+@database_common.connection_handler
+def add_answer_comment(cursor, comment):
+    cursor.execute('''
+                INSERT INTO comment (question_id, answer_id, message, submission_time, user_name)
+                VALUES %(comment)s
+    ''', {'comment':comment})

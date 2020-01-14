@@ -230,11 +230,23 @@ def add_comment_to_question(question_id):
     return render_template("comment_question.html", question_id=question_id)
 
 
-@app.route('/question/<answer_id>/new-comment', methods=['POST', 'GET'])
+@app.route('/answer/<answer_id>/new-comment', methods=['POST', 'GET'])
 def add_comment_to_answer(answer_id):
+    ques_id = data_manager.get_question_id(answer_id)
+    q_id=ques_id[0]
+    question_id = q_id['question_id']
+    print(question_id)
     if request.method == "POST":
-        pass
-    return render_template("comment_answer.html")
+        comment = ()
+        comment += (question_id, )
+        comment += (answer_id, )
+        comment += (request.form.get('answer_comment'), )
+        comment += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
+        comment += (session['user_name'], )
+        print(comment)
+        data_manager.add_answer_comment(comment)
+        return redirect(url_for('display_question', question_id=question_id))
+    return render_template("comment_answer.html", answer_id=answer_id, question_id=question_id)
 
 
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
