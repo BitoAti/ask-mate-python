@@ -9,7 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #return login_as_test()
+    return login_as_test()
     if request.method == 'POST':
         username = request.form.get('user_name')
 
@@ -36,8 +36,8 @@ def index():
 
 
 def login_as_test():
-    session["user_name"] = "test"
-    session["type"] = "user"
+    session["user_name"] = "Admin"
+    session["type"] = "Admin"
     return list()
 
 
@@ -59,7 +59,8 @@ def list():
         column = "message"
         direction = "ASC"
     question = data_manager.get_all_question(column, direction)
-    return render_template("list.html", question=question)
+    my_id = data_manager.get_user_id(session["user_name"])
+    return render_template("list.html", question=question, my_id=my_id)
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -87,12 +88,15 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/my_profile')
-def my_profile():
+@app.route('/user/<user_id>')
+def my_profile(user_id):
     name = session["user_name"]
     profile = data_manager.my_profile(name)
-    print(profile)
-    return render_template("my_profile.html", profile=profile[0])
+    my_questions = data_manager.get_my_questions(name)
+    my_answers = data_manager.get_my_answers(name)
+    print(my_answers)
+    my_comments = data_manager.get_my_comments(name)
+    return render_template("my_profile.html", profile=profile[0], my_questions=my_questions, my_answers=my_answers, my_comments=my_comments)
 
 
 @app.route("/add-question", methods=['POST', 'GET'])
@@ -104,10 +108,7 @@ def add_question():
         new_question += (request.form.get('title'),)
         new_question += (request.form.get('message'),)
         new_question += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
-        list_of_id = data_manager.get_user_id(session["user_name"])
-
-        user_row = list_of_id[0]
-        new_question += (user_row["user_id"],)
+        new_question += (session["user_name"],)
         data_manager.add_new_question(new_question)
         return redirect("/list")
     return render_template("add_question.html")
@@ -132,9 +133,7 @@ def add_answer(question_id):
         new_answer += (question_id,)
         new_answer += (request.form.get('ans'),)
         new_answer += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
-        list_of_id = data_manager.get_user_id(session["user_name"])
-        user_row = list_of_id[0]
-        new_answer += (user_row["user_id"],)
+        new_answer += (session["user_name"],)
         data_manager.add_new_answer(new_answer)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('add_answer.html', question_id=question_id)
@@ -224,9 +223,8 @@ def add_comment_to_question(question_id):
         comment += (question_id,)
         comment += (request.form.get("question_comment"),)
         comment += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
-        us_id = data_manager.get_user_id(session["user_name"])
-        u_id = us_id[0]
-        comment += (u_id["user_id"],)
+
+        comment += (session["user_name"],)
         data_manager.add_question_comment(comment)
         return redirect(url_for("display_question", question_id=question_id))
     return render_template("comment_question.html", question_id=question_id)
@@ -254,18 +252,19 @@ def edit_question_comment(comment_id):
     return render_template("edit_question_comment.html", comment=comment)
 
 
-
-
-
-
-
-
-
-
 @app.route('/comment/<comment_id>/delete/<question_id>')
 def delete_question_comment(comment_id,question_id):
     data_manager.delete_question_comments(comment_id)
     return redirect(url_for("display_question", question_id=question_id))
+
+
+
+@app.route('/userlist')
+def list_of_users():
+    user_list = data_manager.get_all_user()
+    return render_template("list_of_users.html", user_list=user_list)
+
+
 
 
 if __name__ == '__main__':

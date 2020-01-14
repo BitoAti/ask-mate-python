@@ -70,7 +70,7 @@ def get_all_question(cursor, column="id", direction="DESC"):
 @database_common.connection_handler
 def add_new_question(cursor, new_question):
     cursor.execute('''
-    INSERT into question(view_number,vote_number,title,message,submission_time,user_id) VALUES %(new_question)s
+    INSERT into question(view_number,vote_number,title,message,submission_time,user_name) VALUES %(new_question)s
 
     ''', {"new_question": new_question})
 
@@ -112,7 +112,7 @@ def get_answers(cursor, q_id):
 @database_common.connection_handler
 def add_new_answer(cursor, new_answer):
     cursor.execute('''
-    INSERT into answer(vote_number,question_id, message,submission_time, user_id) VALUES %(new_answer)s
+    INSERT into answer(vote_number,question_id, message,submission_time, user_name) VALUES %(new_answer)s
 
     ''', {"new_answer": new_answer})
 
@@ -254,7 +254,7 @@ def get_result_a(cursor, search_phrase):
 @database_common.connection_handler
 def add_question_comment(cursor, comment):
     cursor.execute(''' 
-                    INSERT INTO comment(question_id, message, submission_time, user_id)
+                    INSERT INTO comment(question_id, message, submission_time, user_name)
                     VALUES %(comment)s
                     
     ''', {"comment": comment})
@@ -338,3 +338,45 @@ def my_profile(cursor, name):
     profile = cursor.fetchall()
     return profile
 
+
+@database_common.connection_handler
+def get_all_user(cursor):
+    cursor.execute('''
+                    SELECT * FROM users
+
+    ''')
+    users = cursor.fetchall()
+    return users
+
+
+
+
+
+@database_common.connection_handler
+def get_my_questions(cursor, name):
+    cursor.execute('''
+                    SELECT * FROM question
+                    WHERE user_name = %(name)s
+    ''',     {"name": name})
+    my_data = cursor.fetchall()
+    return my_data
+
+
+@database_common.connection_handler
+def get_my_answers(cursor, name):
+    cursor.execute('''
+                    SELECT * FROM answer
+                    WHERE user_name = %(name)s
+    ''',     {"name": name})
+    my_data = cursor.fetchall()
+    return my_data
+
+
+@database_common.connection_handler
+def get_my_comments(cursor, name):
+    cursor.execute('''
+                    SELECT * FROM comment
+                    WHERE user_name = %(name)s
+    ''', {"name": name})
+    my_data = cursor.fetchall()
+    return my_data

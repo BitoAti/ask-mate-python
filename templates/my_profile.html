@@ -3,8 +3,24 @@
 {% block content %}
 {% for user in profile %}
 {{user.name}}
+
+
 {% endfor %}
 {% if session["type"] == "Admin" %}
-<h2>YOU ARE LOGGED ON AS ADMIN</h2>
+<h2> <a href="{{ url_for('list_of_users')}}">List of users</a></h2>
 {%  endif   %}
+<h1>My questions</h1>
+{% for user in my_questions %}
+{{user}}
+{% endfor %}
+<h1>My answers</h1>
+{% for user in my_answers %}
+{{user}}
+
+{% endfor %}
+<h1>My comments</h1>
+{% for user in my_comments %}
+{{user}}
+
+{% endfor %}
 {%endblock%}

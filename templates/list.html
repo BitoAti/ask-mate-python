@@ -2,11 +2,12 @@
 
 {% block content %}
 <H1>LIST</H1>
-
+{% for line in my_id %}
 {% if session["type"] != "visitor" %}
 <a href="{{ url_for('logout')}}">Log out</a>
-<a href="{{ url_for('my_profile')}}">My profile</a>
+<a href="{{ url_for('my_profile', user_id=line.user_id)}}">My profile</a>
 {% endif %}
+{% endfor %}
 {%    if session["type"] == "visitor": %}
 <p>All question</p>
 {%    elif session["type"] == "user":  %}
