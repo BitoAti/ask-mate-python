@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% for item in comment %}
+<form action="" method="post" class="form">
+    <h2>Here you can add a new comment</h2>
+    <p>
+        <label id="new_question_comment"></label>
+        <textarea rows="25" cols="50" name="new_question_comment" placeholder="Type your comment" required>{{item.message}}</textarea>
+    </p>
+
+    <button class="subbutton" type="submit">Submit your comment</button>
+
+</form>
+<a href=" {{ url_for('display_question', question_id = item.question_id)}} ">Back to question</a>
+
+{% endfor %}
+<p></p>
+
+
+{% endblock %}

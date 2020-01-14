@@ -9,19 +9,27 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return login_as_test()
+    #return login_as_test()
     if request.method == 'POST':
         username = request.form.get('user_name')
+
         password = request.form.get("password")
         result_list = data_manager.get_line(username)
+
         if len(result_list) != 1:
             return redirect('/')
         user_row = result_list[0]
         if not data_manager.verify_password(password, user_row['password']):
             return redirect('/')
+
         session["user_name"] = username
-        session["type"] = "user"
-        return list()
+        if username == "Admin":
+            session["type"] = "Admin"
+        else:
+            session["type"] = "user"
+        return redirect(url_for("list"))
+
+    session.pop('type', None)
     session.pop('user_name', None)
     questions = data_manager.get_five_question()
     return render_template('index.html', question=questions)
@@ -64,7 +72,7 @@ def registration():
             data_manager.save_user_data(username, hashed_pw)
             session["user_name"] = username
             session["type"] = "user"
-            return list(username)
+            return redirect(url_for("list", user_name=username))
         except:
             return redirect(url_for('registration'))
     return render_template('registration.html')
@@ -74,12 +82,17 @@ def registration():
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
+    session.pop('type', None)
+
     return redirect(url_for('index'))
 
 
 @app.route('/my_profile')
 def my_profile():
-    return render_template("my_profile.html")
+    name = session["user_name"]
+    profile = data_manager.my_profile(name)
+    print(profile)
+    return render_template("my_profile.html", profile=profile[0])
 
 
 @app.route("/add-question", methods=['POST', 'GET'])
@@ -92,6 +105,7 @@ def add_question():
         new_question += (request.form.get('message'),)
         new_question += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         list_of_id = data_manager.get_user_id(session["user_name"])
+
         user_row = list_of_id[0]
         new_question += (user_row["user_id"],)
         data_manager.add_new_question(new_question)
@@ -103,7 +117,11 @@ def add_question():
 def display_question(question_id):
     question = data_manager.get_question(question_id)
     answer = data_manager.get_answers(question_id)
-    return render_template("display_question.html", question=question, answer=answer)
+    question_comments = data_manager.get_question_comments(question_id)
+    answer_comments = data_manager.get_answer_comments(question_id)
+
+    return render_template("display_question.html", question=question, answer=answer,
+                           question_comments=question_comments, answer_comments=answer_comments)
 
 
 @app.route('/display_question/<question_id>/add_answer', methods=['POST', 'GET'])
@@ -114,6 +132,9 @@ def add_answer(question_id):
         new_answer += (question_id,)
         new_answer += (request.form.get('ans'),)
         new_answer += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
+        list_of_id = data_manager.get_user_id(session["user_name"])
+        user_row = list_of_id[0]
+        new_answer += (user_row["user_id"],)
         data_manager.add_new_answer(new_answer)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('add_answer.html', question_id=question_id)
@@ -216,6 +237,35 @@ def add_comment_to_answer(answer_id):
     if request.method == "POST":
         pass
     return render_template("comment_answer.html")
+
+
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def edit_question_comment(comment_id):
+    comment = data_manager.get_one_comment(comment_id)
+    comm = comment[0]
+    question_id = comm["question_id"]
+    print(question_id)
+
+    if request.method == "POST":
+        new_comment = request.form.get("new_question_comment")
+        print(new_comment)
+        data_manager.edit_comment(new_comment, comment_id)
+        return redirect(url_for("display_question", question_id=question_id))
+    return render_template("edit_question_comment.html", comment=comment)
+
+
+
+
+
+
+
+
+
+
+@app.route('/comment/<comment_id>/delete/<question_id>')
+def delete_question_comment(comment_id,question_id):
+    data_manager.delete_question_comments(comment_id)
+    return redirect(url_for("display_question", question_id=question_id))
 
 
 if __name__ == '__main__':

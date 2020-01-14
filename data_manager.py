@@ -51,7 +51,7 @@ def get_five_question(cursor):
     cursor.execute('''
     SELECT * FROM question
     ORDER BY id DESC 
-    LIMIT 5 users_user_name_uindex
+    LIMIT 5 
      ''')
     question = cursor.fetchall()
     return question
@@ -112,7 +112,7 @@ def get_answers(cursor, q_id):
 @database_common.connection_handler
 def add_new_answer(cursor, new_answer):
     cursor.execute('''
-    INSERT into answer(vote_number,question_id, message,submission_time) VALUES %(new_answer)s
+    INSERT into answer(vote_number,question_id, message,submission_time, user_id) VALUES %(new_answer)s
 
     ''', {"new_answer": new_answer})
 
@@ -253,9 +253,88 @@ def get_result_a(cursor, search_phrase):
 
 @database_common.connection_handler
 def add_question_comment(cursor, comment):
-    print(comment)
     cursor.execute(''' 
                     INSERT INTO comment(question_id, message, submission_time, user_id)
                     VALUES %(comment)s
                     
     ''', {"comment": comment})
+
+
+@database_common.connection_handler
+def get_one_comment(cursor, comment_id):
+    cursor.execute('''
+                    SELECT * FROM comment
+                    WHERE id = %(comment_id)s
+    
+    ''',    {"comment_id":comment_id})
+    comment = cursor.fetchall()
+    return comment
+
+
+@database_common.connection_handler
+def get_question_comments(cursor, question_id):
+    cursor.execute('''
+                    SELECT * FROM comment
+                    WHERE question_id = %(question_id)s
+
+    ''',    {"question_id":question_id})
+    comment = cursor.fetchall()
+    return comment
+
+
+
+@database_common.connection_handler
+def get_answer_comments(cursor, answer_id):
+    cursor.execute('''
+                    SELECT * FROM comment
+                    WHERE answer_id = %(answer_id)s
+
+    ''',       {"answer_id":answer_id})
+    comment = cursor.fetchall()
+    return comment
+
+
+@database_common.connection_handler
+def delete_question_comments(cursor, comment_id):
+    cursor.execute('''
+                        DELETE from comment
+                        WHERE id = %(comment_id)s
+  
+                
+
+    ''',     {"comment_id":comment_id})
+
+
+
+@database_common.connection_handler
+def edit_question_comments(cursor, comment_id):
+    cursor.execute('''
+
+
+    ''', {"comment_id": comment_id})
+    comment = cursor.fetchall()
+    return comment
+
+
+
+@database_common.connection_handler
+def edit_comment(cursor, new_comment, comment_id):
+        cursor.execute('''
+        UPDATE comment
+        SET message = %(new_comment)s
+        WHERE id= %(comment_id)s
+        ''',
+                       {"new_comment": new_comment, "comment_id": comment_id})
+
+
+@database_common.connection_handler
+def my_profile(cursor, name):
+    cursor.execute('''
+                    SELECT * FROM users
+                    WHERE user_name = %(name)s
+
+    ''',
+                   {"name": name})
+    profile = cursor.fetchall()
+    return profile
+

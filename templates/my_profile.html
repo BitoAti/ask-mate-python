@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
-
+{% for user in profile %}
+{{user.name}}
+{% endfor %}
+{% if session["type"] == "Admin" %}
+<h2>YOU ARE LOGGED ON AS ADMIN</h2>
+{%  endif   %}
 {%endblock%}

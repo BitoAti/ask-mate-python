@@ -7,6 +7,10 @@
 </head>
 <body>
 <h2>{{session["user_name"]}}</h2>
+{% if session["type"] == "Admin" %}
+<h2>YOU ARE LOGGED ON AS ADMIN</h2>
+{%  endif   %}
+
 
 <div class="content-wrapper">
     {% block content %} {% endblock %}

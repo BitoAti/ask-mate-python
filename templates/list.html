@@ -3,7 +3,7 @@
 {% block content %}
 <H1>LIST</H1>
 
-{% if session["type"] == "user" %}
+{% if session["type"] != "visitor" %}
 <a href="{{ url_for('logout')}}">Log out</a>
 <a href="{{ url_for('my_profile')}}">My profile</a>
 {% endif %}
