@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>AskMate</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    </head>
-    <body>
-    <h2>{{session["user_name"]}}</h2>
+<head>
+    <meta charset="UTF-8">
+    <title>AskMate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+<h2>{{session["user_name"]}}</h2>
 
-        <div class="content-wrapper">
-            {% block content %} {% endblock %}
-        </div>
-    </body>
+<div class="content-wrapper">
+    {% block content %} {% endblock %}
+</div>
+</body>
 </html>
 
 

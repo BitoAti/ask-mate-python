@@ -1,16 +1,15 @@
-
-from flask import Flask, session, redirect, url_for, escape, request, make_response, render_template, redirect, request, url_for
+from flask import Flask, session, redirect, url_for, escape, request, make_response, render_template, redirect, request, \
+    url_for
 import data_manager
+from time import gmtime, strftime
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-from time import gmtime, strftime
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return login_as_test()
-
     if request.method == 'POST':
         username = request.form.get('user_name')
         password = request.form.get("password")
@@ -45,8 +44,7 @@ def enter_as_visitor():
 def list():
     if request.method == 'POST':
         word_for_search = request.form.get("search_phrase")
-        print(word_for_search)
-        return redirect(url_for("result", search_phrase = word_for_search))
+        return redirect(url_for("result", search_phrase=word_for_search))
     column = request.args.get("order_by")
     direction = request.args.get("direction")
     if column == None:
@@ -63,7 +61,7 @@ def registration():
         password = request.form.get("password")
         hashed_pw = data_manager.hash_password(password)
         try:
-            data_manager.save_user_data(username,hashed_pw)
+            data_manager.save_user_data(username, hashed_pw)
             session["user_name"] = username
             session["type"] = "user"
             return list(username)
@@ -87,7 +85,6 @@ def my_profile():
 @app.route("/add-question", methods=['POST', 'GET'])
 def add_question():
     new_question = ()
-
     if request.method == 'POST':
         new_question += (0,)
         new_question += (0,)
@@ -118,7 +115,6 @@ def add_answer(question_id):
         new_answer += (request.form.get('ans'),)
         new_answer += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         data_manager.add_new_answer(new_answer)
-        print(question_id)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('add_answer.html', question_id=question_id)
 
@@ -133,7 +129,6 @@ def delete_question(question_id):
 @app.route('/question/<question_id>/edit', methods=['POST', 'GET'])
 def edit_question(question_id):
     question_to_edit = data_manager.get_question(question_id)
-
     if request.method == 'POST':
         new_title = ()
         new_message = ()
@@ -147,12 +142,10 @@ def edit_question(question_id):
 @app.route('/answer/<answer_id>/edit', methods=['POST', 'GET'])
 def edit_answer(answer_id):
     answer_to_edit = data_manager.get_one_answer(answer_id)
-    print(answer_to_edit)
     if request.method == 'POST':
         new_answer = (request.form.get('ans'),)
         data_manager.edit_answer(new_answer, answer_id)
         result = data_manager.get_question_id(answer_id)
-        print(result)
         res = result[0]
         question_id = res["question_id"]
         return redirect(url_for('display_question', question_id=question_id, ))
@@ -174,17 +167,17 @@ def question_vote_down(question_id):
 @app.route('/display_question/<question_id>/delete_answer/<answer_id>')
 def delete_answer(question_id, answer_id):
     data_manager.delete_one_answer(int(answer_id))
-    print(question_id)
     return redirect(url_for('display_question', question_id=question_id))
+
 
 @app.route('/answer/<answer_id>/vote_up')
 def answer_vote_up(answer_id):
     data_manager.answer_vote_up(answer_id)
     result = data_manager.get_question_id(answer_id)
-    print(result)
     res = result[0]
     question_id = res["question_id"]
-    return redirect(url_for('display_question', question_id=question_id ))
+    return redirect(url_for('display_question', question_id=question_id))
+
 
 @app.route('/answer/<answer_id>/vote_down')
 def answer_vote_down(answer_id):
@@ -192,16 +185,14 @@ def answer_vote_down(answer_id):
     result = data_manager.get_question_id(answer_id)
     res = result[0]
     question_id = res["question_id"]
-    return redirect(url_for('display_question', question_id=question_id ))
+    return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/search?q=<search_phrase>')
 def result(search_phrase):
     word = "%" + search_phrase + "%"
-    print(word)
     questions = data_manager.get_result_q(word)
     answer = data_manager.get_result_a(word)
-    print(questions)
     return render_template('result.html', questions=questions, answer=answer)
 
 
@@ -216,8 +207,8 @@ def add_comment_to_question(question_id):
         u_id = us_id[0]
         comment += (u_id["user_id"],)
         data_manager.add_question_comment(comment)
-        return redirect( url_for("display_question", question_id=question_id))
-    return render_template("comment_question.html")
+        return redirect(url_for("display_question", question_id=question_id))
+    return render_template("comment_question.html", question_id=question_id)
 
 
 @app.route('/question/<answer_id>/new-comment', methods=['POST', 'GET'])

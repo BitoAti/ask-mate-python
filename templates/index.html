@@ -7,29 +7,29 @@
 <a href="{{ url_for('enter_as_visitor')}}">Enter without registration</a>
 
 <br>
-    <form action="" method="POST" class="form">
-        <p>User name</p>
-        <label for="user_name"></label><input name="user_name" id="user_name">
-        <p>Password</p>
-        <label for="password"></label><input type='password' name="password" id="password">
-        <button class="button" type="submit">Login</button>
+<form action="" method="POST" class="form">
+    <p>User name</p>
+    <label for="user_name"></label><input name="user_name" id="user_name">
+    <p>Password</p>
+    <label for="password"></label><input type='password' name="password" id="password">
+    <button class="button" type="submit">Login</button>
 
 
 
-<table id="main_table">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Submission Time</th>
-        <th>View number</th>
-        <th>Vote number</th>
-        <th>Title</th>
-        <th>Message</th>
-        <th>Image</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for row in question %}
+    <table id="main_table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Submission Time</th>
+            <th>View number</th>
+            <th>Vote number</th>
+            <th>Title</th>
+            <th>Message</th>
+            <th>Image</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in question %}
         <tr>
             <td>{{ row.id }}</td>
             <td>{{ row.submission_time }}</td>
@@ -40,8 +40,8 @@
             <td>{{ row.image }}</td>
 
         </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        {% endfor %}
+        </tbody>
+    </table>
 
-{% endblock %}
+    {% endblock %}

@@ -19,22 +19,21 @@ def get_line(cursor, user_name):
                     SELECT user_name,password FROM users
                     WHERE user_name = %(user_name)s
     
-    ''',    {'user_name':user_name})
+    ''', {'user_name': user_name})
     line = cursor.fetchall()
     return line
 
 
 @database_common.connection_handler
-def check_username(cursor,user_name):
+def check_username(cursor, user_name):
     cursor.execute('''
                 SELECT count(*) as num  FROM users
                 WHERE user_name = %(user_name)s    
     
-    ''',   {"user_name": user_name})
+    ''', {"user_name": user_name})
 
     result = cursor.fetchall()
     return result
-
 
 
 @database_common.connection_handler
@@ -52,7 +51,7 @@ def get_five_question(cursor):
     cursor.execute('''
     SELECT * FROM question
     ORDER BY id DESC 
-    LIMIT 5users_user_name_uindex
+    LIMIT 5 users_user_name_uindex
      ''')
     question = cursor.fetchall()
     return question
@@ -60,7 +59,6 @@ def get_five_question(cursor):
 
 @database_common.connection_handler
 def get_all_question(cursor, column="id", direction="DESC"):
-
     cursor.execute(f"""
     SELECT * FROM question
     ORDER BY {column} {direction}
@@ -78,12 +76,12 @@ def add_new_question(cursor, new_question):
 
 
 @database_common.connection_handler
-def get_user_id(cursor,user_name):
+def get_user_id(cursor, user_name):
     cursor.execute('''
                     SELECT user_id FROM users
                     where user_name = %(user_name)s
     
-    ''',      {"user_name":user_name})
+    ''', {"user_name": user_name})
     user_id = cursor.fetchall()
     return user_id
 
@@ -110,6 +108,7 @@ def get_answers(cursor, q_id):
     answer = cursor.fetchall()
     return answer
 
+
 @database_common.connection_handler
 def add_new_answer(cursor, new_answer):
     cursor.execute('''
@@ -126,13 +125,14 @@ def delete_question(cursor, question_id):
     ''',
                    {"question_id": question_id})
 
+
 @database_common.connection_handler
 def delete_all_answer(cursor, question_id):
     cursor.execute('''
     DELETE from answer
     WHERE question_id = %(question_id)s
     ''',
-               {"question_id": question_id})
+                   {"question_id": question_id})
 
 
 @database_common.connection_handler
@@ -153,6 +153,7 @@ def delete_one_answer(cursor, answer_id):
     ''',
                    {"answer_id": answer_id})
 
+
 @database_common.connection_handler
 def question_vote_up(cursor, question_id):
     cursor.execute('''
@@ -161,6 +162,7 @@ def question_vote_up(cursor, question_id):
     WHERE id = %(question_id)s
     ''',
                    {"question_id": question_id})
+
 
 @database_common.connection_handler
 def question_vote_down(cursor, question_id):
@@ -171,6 +173,7 @@ def question_vote_down(cursor, question_id):
     ''',
                    {"question_id": question_id})
 
+
 @database_common.connection_handler
 def answer_vote_up(cursor, answer_id):
     cursor.execute('''
@@ -179,7 +182,6 @@ def answer_vote_up(cursor, answer_id):
     WHERE id = %(answer_id)s
     ''',
                    {"answer_id": answer_id})
-
 
 
 @database_common.connection_handler
@@ -198,7 +200,7 @@ def get_question_id(cursor, answer_id):
                     SELECT question_id FROM answer
                     where id = %(answer_id)s
 
-    ''', {"answer_id":answer_id})
+    ''', {"answer_id": answer_id})
     question_id = cursor.fetchall()
     return question_id
 
@@ -232,7 +234,7 @@ def get_result_q(cursor, search_phrase):
     
                     WHERE upper(title) like upper(%(search_phrase)s) or lower(message) like lower(%(search_phrase)s)
     
-    ''',   {"search_phrase":search_phrase})
+    ''', {"search_phrase": search_phrase})
     result = cursor.fetchall()
     return result
 
@@ -256,4 +258,4 @@ def add_question_comment(cursor, comment):
                     INSERT INTO comment(question_id, message, submission_time, user_id)
                     VALUES %(comment)s
                     
-    ''',      {"comment":comment})
+    ''', {"comment": comment})

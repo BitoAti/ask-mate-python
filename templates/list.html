@@ -8,9 +8,9 @@
 <a href="{{ url_for('my_profile')}}">My profile</a>
 {% endif %}
 {%    if session["type"] == "visitor": %}
-       <p>All question</p>
+<p>All question</p>
 {%    elif session["type"] == "user":  %}
-       {{user_name}}
+{{user_name}}
 {% endif %}
 <form action="" method="POST" >
 
@@ -20,32 +20,32 @@
 <table>
     <thead>
     <tr>
-        <th><a href="{{ url_for('list', order_by = "id", direction = "ASC") }}">Id</a></th>
-        <th><a href="{{ url_for('list', order_by = "submission_time", direction = "ASC") }}">Submission time</a></th>
-        <th><a href="{{ url_for('list', order_by = "view_number", direction = "ASC") }}">View number</a></th>
-        <th><a href="{{ url_for('list', order_by = "vote_number", direction = "ASC") }}">Vote number</a></th>
-        <th><a href="{{ url_for('list', order_by = "title", direction = "ASC") }}">Title</a></th>
-        <th><a href="{{ url_for('list', order_by = "message", direction = "ASC") }}">Message</a></th>
+        <th><a href="{{ url_for('list', order_by = 'id', direction = 'ASC') }}">Id</a></th>
+        <th><a href="{{ url_for('list', order_by = 'submission_time', direction = 'ASC') }}">Submission time</a></th>
+        <th><a href="{{ url_for('list', order_by = 'view_number', direction = 'ASC') }}">View number</a></th>
+        <th><a href="{{ url_for('list', order_by = 'vote_number', direction = 'ASC') }}">Vote number</a></th>
+        <th><a href="{{ url_for('list', order_by = 'title', direction = 'ASC') }}">Title</a></th>
+        <th><a href="{{ url_for('list', order_by = 'message', direction = 'ASC') }}">Message</a></th>
         <th>Image</th>
 
     </tr>
     </thead>
     <tbody>
     {% for row in question %}
-        <tr>
-            <td>{{ row.id }}</td>
-            <td>{{ row.submission_time }}</td>
-            <td>{{ row.view_number }}</td>
-            <td>{{ row.vote_number }}</td>
-            <td><a href="{{ url_for('display_question', question_id = row.id) }}">{{ row.title }}</a></td>
+    <tr>
+        <td>{{ row.id }}</td>
+        <td>{{ row.submission_time }}</td>
+        <td>{{ row.view_number }}</td>
+        <td>{{ row.vote_number }}</td>
+        <td><a href="{{ url_for('display_question', question_id = row.id) }}">{{ row.title }}</a></td>
 
-            <td>{{ row.message }} </td>
-            <td>{{ row.image }}</td>
-        </tr>
+        <td>{{ row.message }} </td>
+        <td>{{ row.image }}</td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>
 
 
-<a href="{{ url_for('add_question') }}">Add question</a></th>
+<a href="{{ url_for('add_question') }}">Add question</a>
 {% endblock %}

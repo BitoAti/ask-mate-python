@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+{% extends "layout.html" %}
 
-    <meta charset="UTF-8">
-    <title>AskMate</title>
-</head>
-<body>
+{% block content %}
+
 {%for line in answer_to_edit%}
 <form action="" method="post" class="form">
     <h2>Here you can add a new answer</h2>
@@ -24,5 +19,4 @@
 <a href=" {{ url_for('display_question', question_id = question_id)}} ">Back to question</a>
 
 
-</body>
-</html>
+{%endblock%}

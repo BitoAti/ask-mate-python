@@ -1,27 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" type="text/css" href="/static/style3.css">
-    <meta charset="UTF-8">
-    <title>AskMate</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+
 <h1>Question</h1>
+
 {% for item in question %}
-    <div class="qstion">
+
+<div class="qstion">
     <p id="questitle">{{ item.title }}</p>
     <p>{{ item.message }}</p>
 
-
-        <a href="{{ url_for('question_vote_up', question_id = item.id) }}">UP</a>
-        <a href="{{ url_for('question_vote_down', question_id = item.id) }}">DOWN</a>
-
-
-        <p>Vote number: {{ item.vote_number }}
-            | Posted: {{ item.submission_time }}</p>
+    <a href="{{ url_for('question_vote_up', question_id = item.id) }}">UP</a>
+    <a href="{{ url_for('question_vote_down', question_id = item.id) }}">DOWN</a>
 
 
-    </div>
+    <p>Vote number: {{ item.vote_number }}
+        | Posted: {{ item.submission_time }}</p>
+
+</div>
 {% endfor%}
 
 {% for line in question %}
@@ -32,49 +30,47 @@
 {% endfor %}
 <h1>Answer</h1>
 <div class="qstion">
-<table>
-    {% for item in answer %}
+    <table>
+        {% for item in answer %}
         <thead>
         <tr>
-        <td>{{ item.message }}</td>
-        <td>{{ item.vote_number }}</td>
-        <td>{{ item.submission_time }} </td>
-
-
-
-            <a href="{{url_for('add_comment_to_answer', answer_id = item.id)}}">Add comment</a>
-
+            <td>{{ item.message }}</td>
+            <td>{{ item.vote_number }}</td>
+            <td>{{ item.submission_time }} </td>
 
             <td><a href="{{ url_for('answer_vote_up', question_id = item.question_id, answer_id = item.id) }}">Vote up</a></td>
-        <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a></td>
+            <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a></td>
 
-        <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
-        <td><a href="{{ url_for('edit_answer',answer_id = item.id) }}">Edit answer</a></td>
+            <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
+            <td><a href="{{ url_for('edit_answer',answer_id = item.id) }}">Edit answer</a></td>
+            <td><a href="{{url_for('add_comment_to_answer', answer_id = item.id)}}">Add comment</a></td>
 
             {% endfor %}
 
         </tr>
-    </thead>
-</table>
+        </thead>
+    </table>
 </div>
 <br>
 
 <div class="link">
-{% for item in question %}
-<a href="{{ url_for('edit_question', question_id = item.id )}}">Edit question</a>
-{% endfor %}
+    {% for item in question %}
+    <a href="{{ url_for('edit_question', question_id = item.id )}}">Edit question</a>
+    {% endfor %}
 
-{% for item in question%}
-<a href="{{ url_for("add_answer", question_id = item.id )}}">Add answer</a>
-{% endfor %}
+    {% for item in question%}
+    <a href="{{ url_for('add_answer', question_id = item.id )}}">Add answer</a>
+    {% endfor %}
 
 
-{% for item in question %}
-    <a href="{{ url_for("delete_question" , question_id = item.id  ) }}">Delete question</a> <br>
+    {% for item in question %}
+    <a href="{{ url_for('delete_question', question_id = item.id  ) }}">Delete question</a> <br>
 
-{% endfor %}
-<a href="/list">Back to questions</a>
-<p></p>
+    {% endfor %}
+    <a href="/list">Back to questions</a>
+    <p></p>
 </div>
-</body>
-</html>
+
+
+{% endblock %}
+
