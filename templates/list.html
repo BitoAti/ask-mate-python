@@ -27,6 +27,8 @@
         <th><a href="{{ url_for('list', order_by = 'vote_number', direction = 'ASC') }}">Vote number</a></th>
         <th><a href="{{ url_for('list', order_by = 'title', direction = 'ASC') }}">Title</a></th>
         <th><a href="{{ url_for('list', order_by = 'message', direction = 'ASC') }}">Message</a></th>
+        <th><a href="{{ url_for('list', order_by = 'user_name', direction = 'ASC') }}">User</a></th>
+
         <th>Image</th>
 
     </tr>
@@ -41,6 +43,8 @@
         <td><a href="{{ url_for('display_question', question_id = row.id) }}">{{ row.title }}</a></td>
 
         <td>{{ row.message }} </td>
+        <td>{{ row.user_name }} </td>
+
         <td>{{ row.image }}</td>
     </tr>
     {% endfor %}
@@ -50,3 +54,14 @@
 
 <a href="{{ url_for('add_question') }}">Add question</a>
 {% endblock %}
+
+
+
+
+@database_common.connection_handler
+def save_tag(cursor, question_id, tag_id):
+    cursor.execute('''
+                INSERT INTO comment (question_id, tag_id)
+                VALUES %(comment)s
+
+    ''',      {"question_id":question_id, "tag_id":tag_id})

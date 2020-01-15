@@ -10,6 +10,10 @@
 <div class="qstion">
     <p id="questitle">{{ item.title }}</p>
     <p>{{ item.message }}</p>
+    {% for line in tags %}
+    {{line.name}}
+    {% endfor %}
+
     {% if item.user_name != session["user_name"] %}
     <a href="{{ url_for('question_vote_up', question_id = item.id) }}">UP</a>
     <a href="{{ url_for('question_vote_down', question_id = item.id) }}">DOWN</a>
@@ -17,6 +21,7 @@
 
     <p>Vote number: {{ item.vote_number }}
         | Posted: {{ item.submission_time }}</p>
+    <p>User</p>
 
 </div>
 {% endfor%}
@@ -55,7 +60,7 @@
                 up</a></td>
 
             <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a>
-            {% if item.accepted < 1 %}
+                {% if item.accepted < 1 %}
             <td><a href="{{ url_for('accept_answer', answer_id = item.id) }}">Accept answer</a></td>
             {% endif %}
 

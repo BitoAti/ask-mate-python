@@ -5,25 +5,16 @@
 
 
 <h1>
-    Add new question!
+    Add new tag!
 </h1>
 
 
 <form action="" method="POST" class="form">
     <p>
-        <label for="title">Title:</label><br>
+        <label for="tit">Title:</label><br>
         <textarea rows="1" cols="15" name="title" id="title" required></textarea>
 
     </p>
-    <p>
-        <label for="message">New question:</label><br>
-        <textarea name="message" rows="20" cols="50" id="message"></textarea>
-    </p>
-    <h3>Please select tags</h3>
-
-    {% for tag in tags %}
-    <p><input type="checkbox" name="tag" value="{{tag.id}}">{{tag.name}} </p>
-    {% endfor %}
     <button class="subbutton" type="submit">Submit question</button>
 
     <form action="" method="POST" class="form">
@@ -31,6 +22,7 @@
 </form>
 
 
+<p></p>
 <a href="/list">Back to questions</a>
 
 {% endblock %}

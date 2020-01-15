@@ -9,7 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #return login_as_test()
+    # return login_as_test()
     if request.method == 'POST':
         username = request.form.get('user_name')
 
@@ -96,12 +96,14 @@ def my_profile(user_id):
     my_answers = data_manager.get_my_answers(name)
     print(my_answers)
     my_comments = data_manager.get_my_comments(name)
-    return render_template("my_profile.html", profile=profile[0], my_questions=my_questions, my_answers=my_answers, my_comments=my_comments)
+    return render_template("my_profile.html", profile=profile[0], my_questions=my_questions, my_answers=my_answers,
+                           my_comments=my_comments)
 
 
 @app.route("/add-question", methods=['POST', 'GET'])
 def add_question():
     new_question = ()
+    tags = data_manager.get_tags()
     if request.method == 'POST':
         new_question += (0,)
         new_question += (0,)
@@ -110,8 +112,15 @@ def add_question():
         new_question += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         new_question += (session["user_name"],)
         data_manager.add_new_question(new_question)
-        return redirect("/list")
-    return render_template("add_question.html")
+        tags = request.form.getlist("tag")
+        q_id = data_manager.get_max_question_id()
+        ques = q_id[0]
+        question_id = ques["max"]
+        for tag_id in tags:
+            new_tag = (question_id, tag_id)
+            data_manager.save_tag(new_tag)
+        return redirect(url_for("list"))
+    return render_template("add_question.html", tags=tags)
 
 
 @app.route("/display_question/<question_id>")
@@ -120,8 +129,9 @@ def display_question(question_id):
     answer = data_manager.get_answers(question_id)
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_answer_comments(question_id)
+    tags = data_manager.get_tags_by_question_id(question_id)
     return render_template("display_question.html", question=question, answer=answer,
-                           question_comments=question_comments, answer_comments=answer_comments)
+                           question_comments=question_comments, answer_comments=answer_comments, tags=tags)
 
 
 @app.route('/display_question/<question_id>/add_answer', methods=['POST', 'GET'])
@@ -200,8 +210,9 @@ def answer_vote_up(answer_id):
     result = data_manager.get_question_id(answer_id)
     res = result[0]
     question_id = res["question_id"]
+    print()
     value = 10
-    reputation_by_answer_id(value, question_id)
+    reputation_by_answer_id(value, answer_id)
     data_manager.answer_vote_up(answer_id)
 
     return redirect(url_for('display_question', question_id=question_id))
@@ -243,15 +254,15 @@ def add_comment_to_question(question_id):
 @app.route('/answer/<answer_id>/new-comment', methods=['POST', 'GET'])
 def add_comment_to_answer(answer_id):
     ques_id = data_manager.get_question_id(answer_id)
-    q_id=ques_id[0]
+    q_id = ques_id[0]
     question_id = q_id['question_id']
     if request.method == "POST":
         comment = ()
-        comment += (question_id, )
-        comment += (answer_id, )
-        comment += (request.form.get('answer_comment'), )
+        comment += (question_id,)
+        comment += (answer_id,)
+        comment += (request.form.get('answer_comment'),)
         comment += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
-        comment += (session['user_name'], )
+        comment += (session['user_name'],)
         print(comment)
         data_manager.add_answer_comment(comment)
         return redirect(url_for('display_question', question_id=question_id))
@@ -263,21 +274,17 @@ def edit_question_comment(comment_id):
     comment = data_manager.get_one_comment(comment_id)
     comm = comment[0]
     question_id = comm["question_id"]
-    print(question_id)
-
     if request.method == "POST":
         new_comment = request.form.get("new_question_comment")
-        print(new_comment)
         data_manager.edit_comment(new_comment, comment_id)
         return redirect(url_for("display_question", question_id=question_id))
     return render_template("edit_question_comment.html", comment=comment)
 
 
 @app.route('/comment/<comment_id>/delete/<question_id>')
-def delete_question_comment(comment_id,question_id):
+def delete_question_comment(comment_id, question_id):
     data_manager.delete_question_comments(comment_id)
     return redirect(url_for("display_question", question_id=question_id))
-
 
 
 @app.route('/userlist')
@@ -294,12 +301,9 @@ def reputation_by_question_id(value, question_id):
 
 
 def reputation_by_answer_id(value, answer_id):
-    print(answer_id)
     user_name_list = data_manager.get_user_name_by_answer_id(answer_id)
-    print(user_name_list)
     user_dict = user_name_list[0]
     user_name = user_dict["user_name"]
-    print(user_name)
     data_manager.reputation_handler(user_name, value)
 
 
@@ -312,6 +316,7 @@ def accept_answer(answer_id):
     res = result[0]
     question_id = res["question_id"]
     return redirect(url_for("display_question", question_id=question_id))
+
 
 
 if __name__ == '__main__':

@@ -442,3 +442,46 @@ def set_answered(cursor, answer_id):
 
 
     ''', {"answer_id":answer_id})
+
+
+
+
+@database_common.connection_handler
+def save_tag(cursor, new_tag):
+    cursor.execute('''
+                INSERT INTO question_tag (question_id, tag_id)
+                VALUES %(new_tag)s
+    
+    ''',      {"new_tag":new_tag})
+
+
+@database_common.connection_handler
+def get_max_question_id(cursor):
+    cursor.execute('''
+                    SELECT MAX(id) FROM question
+    
+    ''')
+    max_id = cursor.fetchall()
+    return max_id
+
+
+@database_common.connection_handler
+def get_tags(cursor):
+    cursor.execute('''
+                    SELECT * FROM tag
+
+    ''')
+    max_id = cursor.fetchall()
+    return max_id
+
+
+@database_common.connection_handler
+def get_tags_by_question_id(cursor, question_id):
+    cursor.execute('''
+                    SELECT name FROM tag FULL JOIN question_tag
+                    ON question_tag.tag_id = tag.id
+                    WHERE question_id = %(question_id)s
+
+    ''',    {"question_id":question_id})
+    tags = cursor.fetchall()
+    return tags
