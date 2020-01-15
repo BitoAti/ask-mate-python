@@ -10,6 +10,7 @@
 <div class="qstion">
     <p id="questitle">{{ item.title }}</p>
     <p>{{ item.message }}</p>
+    <h3>Tags:</h3>
     {% for line in tags %}
     {{line.name}}
     {% endfor %}
@@ -96,7 +97,10 @@
 
 <div class="link">
     {% for item in question %}
+    {% if item.user_name != session["user_name"] %}
+
     <a href="{{ url_for('add_answer', question_id = item.id )}}">Add answer</a>
+    {% endif %}
     {% if item.user_name == session["user_name"] %}
     <a href="{{ url_for('edit_question', question_id = item.id )}}">Edit question</a>
 

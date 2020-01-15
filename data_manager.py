@@ -485,3 +485,24 @@ def get_tags_by_question_id(cursor, question_id):
     ''',    {"question_id":question_id})
     tags = cursor.fetchall()
     return tags
+
+
+@database_common.connection_handler
+def delete_tags(cursor, question_id):
+    cursor.execute('''
+    DELETE from question_tag
+    WHERE question_id = %(question_id)s
+    ''',
+                   {"question_id": question_id})
+
+@database_common.connection_handler
+def count_tags(cursor):
+    cursor.execute('''
+                    SELECT COUNT(tag_id), name FROM question_tag JOIN tag
+                    ON question_tag.tag_id = tag.id
+                    GROUP BY name
+                    
+
+    ''')
+    count_tag = cursor.fetchall()
+    return count_tag

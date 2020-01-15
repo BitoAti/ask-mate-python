@@ -151,6 +151,7 @@ def add_answer(question_id):
 
 @app.route('/display_question/<question_id>/delete_question')
 def delete_question(question_id):
+    data_manager.delete_tags(int(question_id))
     data_manager.delete_all_comment(int(question_id))
     data_manager.delete_all_answer(int(question_id))
     data_manager.delete_question(int(question_id))
@@ -317,6 +318,13 @@ def accept_answer(answer_id):
     question_id = res["question_id"]
     return redirect(url_for("display_question", question_id=question_id))
 
+
+@app.route('/tags')
+def tag_list():
+
+    tags = data_manager.count_tags()
+
+    return render_template("tags.html", tags=tags)
 
 
 if __name__ == '__main__':
