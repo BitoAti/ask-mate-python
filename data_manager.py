@@ -287,7 +287,7 @@ def get_question_comments(cursor, question_id):
 def get_answer_comments(cursor, answer_id):
     cursor.execute('''
                     SELECT * FROM comment
-                    WHERE answer_id = %(answer_id)s
+                    WHERE question_id = %(answer_id)s
 
     ''',       {"answer_id":answer_id})
     comment = cursor.fetchall()
@@ -388,3 +388,12 @@ def add_answer_comment(cursor, comment):
                 INSERT INTO comment (question_id, answer_id, message, submission_time, user_name)
                 VALUES %(comment)s
     ''', {'comment':comment})
+
+
+@database_common.connection_handler
+def delete_all_comment(cursor, question_id):
+    cursor.execute('''
+    DELETE from comment
+    WHERE question_id = %(question_id)s
+    ''',
+                   {"question_id": question_id})

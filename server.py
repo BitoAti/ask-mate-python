@@ -120,7 +120,7 @@ def display_question(question_id):
     answer = data_manager.get_answers(question_id)
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_answer_comments(question_id)
-
+    print(answer_comments)
     return render_template("display_question.html", question=question, answer=answer,
                            question_comments=question_comments, answer_comments=answer_comments)
 
@@ -141,6 +141,7 @@ def add_answer(question_id):
 
 @app.route('/display_question/<question_id>/delete_question')
 def delete_question(question_id):
+    data_manager.delete_all_comment(int(question_id))
     data_manager.delete_all_answer(int(question_id))
     data_manager.delete_question(int(question_id))
     return redirect('/list')
@@ -235,7 +236,6 @@ def add_comment_to_answer(answer_id):
     ques_id = data_manager.get_question_id(answer_id)
     q_id=ques_id[0]
     question_id = q_id['question_id']
-    print(question_id)
     if request.method == "POST":
         comment = ()
         comment += (question_id, )
