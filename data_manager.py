@@ -39,8 +39,8 @@ def check_username(cursor, user_name):
 @database_common.connection_handler
 def save_user_data(cursor, user_name, password):
     cursor.execute('''
-                INSERT INTO users (user_name, password)
-                VALUES (%(user_name)s, %(password)s)
+                INSERT INTO users (user_name, password, reputation)
+                VALUES (%(user_name)s, %(password)s, 0)
 
     ''',
                    {"user_name": user_name, "password": password})
@@ -85,6 +85,27 @@ def get_user_id(cursor, user_name):
     user_id = cursor.fetchall()
     return user_id
 
+@database_common.connection_handler
+def get_user_name_by_question_id(cursor, question_id):
+    cursor.execute('''
+                    SELECT user_name FROM question
+                    WHERE id = %(question_id)s
+    ''',
+                   {"question_id": question_id})
+    user_id = cursor.fetchall()
+    return user_id
+
+
+@database_common.connection_handler
+def get_user_name_by_answer_id(cursor, answer_id):
+    cursor.execute('''
+                    SELECT user_name FROM answer
+                    WHERE id = %(answer_id)s
+    ''',
+                   {"answer_id": answer_id})
+    user_id = cursor.fetchall()
+    return user_id
+
 
 @database_common.connection_handler
 def get_question(cursor, q_id):
@@ -112,7 +133,7 @@ def get_answers(cursor, q_id):
 @database_common.connection_handler
 def add_new_answer(cursor, new_answer):
     cursor.execute('''
-    INSERT into answer(vote_number,question_id, message,submission_time, user_name) VALUES %(new_answer)s
+    INSERT into answer(vote_number,question_id, message,submission_time, user_name, accepted) VALUES %(new_answer)s
 
     ''', {"new_answer": new_answer})
 
@@ -397,3 +418,27 @@ def delete_all_comment(cursor, question_id):
     WHERE question_id = %(question_id)s
     ''',
                    {"question_id": question_id})
+
+
+
+
+@database_common.connection_handler
+def reputation_handler(cursor,user_name, value):
+    cursor.execute('''
+                    UPDATE users
+                    SET reputation = reputation + %(value)s
+                    WHERE user_name = %(user_name)s
+    
+    
+    ''', {"user_name":user_name, "value":value})
+
+
+@database_common.connection_handler
+def set_answered(cursor, answer_id):
+    cursor.execute('''
+                    UPDATE answer
+                    SET accepted = accepted + 1
+                    WHERE id = %(answer_id)s
+
+
+    ''', {"answer_id":answer_id})

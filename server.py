@@ -9,7 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return login_as_test()
+    #return login_as_test()
     if request.method == 'POST':
         username = request.form.get('user_name')
 
@@ -120,7 +120,6 @@ def display_question(question_id):
     answer = data_manager.get_answers(question_id)
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_answer_comments(question_id)
-    print(answer_comments)
     return render_template("display_question.html", question=question, answer=answer,
                            question_comments=question_comments, answer_comments=answer_comments)
 
@@ -134,6 +133,7 @@ def add_answer(question_id):
         new_answer += (request.form.get('ans'),)
         new_answer += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         new_answer += (session["user_name"],)
+        new_answer += (0,)
         data_manager.add_new_answer(new_answer)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template('add_answer.html', question_id=question_id)
@@ -175,12 +175,16 @@ def edit_answer(answer_id):
 
 @app.route('/display_question/<question_id>/question_vote_up')
 def question_vote_up(question_id):
+    value = 5
+    reputation_by_question_id(value, question_id)
     data_manager.question_vote_up(question_id)
     return redirect(url_for('display_question', question_id=question_id, ))
 
 
 @app.route('/display_question/<question_id>/question_vote_down')
 def question_vote_down(question_id):
+    value = -2
+    reputation_by_question_id(value, question_id)
     data_manager.question_vote_down(question_id)
     return redirect(url_for('display_question', question_id=question_id, ))
 
@@ -193,10 +197,13 @@ def delete_answer(question_id, answer_id):
 
 @app.route('/answer/<answer_id>/vote_up')
 def answer_vote_up(answer_id):
-    data_manager.answer_vote_up(answer_id)
     result = data_manager.get_question_id(answer_id)
     res = result[0]
     question_id = res["question_id"]
+    value = 10
+    reputation_by_answer_id(value, question_id)
+    data_manager.answer_vote_up(answer_id)
+
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -206,6 +213,8 @@ def answer_vote_down(answer_id):
     result = data_manager.get_question_id(answer_id)
     res = result[0]
     question_id = res["question_id"]
+    value = -2
+    reputation_by_answer_id(value, question_id)
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -277,6 +286,32 @@ def list_of_users():
     return render_template("list_of_users.html", user_list=user_list)
 
 
+def reputation_by_question_id(value, question_id):
+    user_name_list = data_manager.get_user_name_by_question_id(question_id)
+    user_dict = user_name_list[0]
+    user_name = user_dict["user_name"]
+    data_manager.reputation_handler(user_name, value)
+
+
+def reputation_by_answer_id(value, answer_id):
+    print(answer_id)
+    user_name_list = data_manager.get_user_name_by_answer_id(answer_id)
+    print(user_name_list)
+    user_dict = user_name_list[0]
+    user_name = user_dict["user_name"]
+    print(user_name)
+    data_manager.reputation_handler(user_name, value)
+
+
+@app.route('/accept_answer/<answer_id>')
+def accept_answer(answer_id):
+    value = 15
+    reputation_by_answer_id(value, answer_id)
+    data_manager.set_answered(answer_id)
+    result = data_manager.get_question_id(answer_id)
+    res = result[0]
+    question_id = res["question_id"]
+    return redirect(url_for("display_question", question_id=question_id))
 
 
 if __name__ == '__main__':
