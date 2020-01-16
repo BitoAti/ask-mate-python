@@ -9,5 +9,7 @@
         <label for="password"></label><input type='password' name="password" id="password" required>
 
         <button class="button" type="submit">Registration</button>
-
+        {% if session["registration"] == "used" %}
+        <p> Username already used, please choose something else </p>
+        {% endif %}
 {% endblock %}

@@ -10,16 +10,26 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # return login_as_test()
+    try:
+        print(alma)
+    except:
+        pass
+
     if request.method == 'POST':
+
         username = request.form.get('user_name')
 
         password = request.form.get("password")
         result_list = data_manager.get_line(username)
 
         if len(result_list) != 1:
+            session["login"] = "wrong"
+            alma = "alma"
             return redirect('/')
         user_row = result_list[0]
         if not data_manager.verify_password(password, user_row['password']):
+            session["login"] = "wrong"
+
             return redirect('/')
 
         session["user_name"] = username
@@ -28,6 +38,7 @@ def index():
         else:
             session["type"] = "user"
         return redirect(url_for("list"))
+    session.pop('registration', None)
 
     session.pop('type', None)
     session.pop('user_name', None)
@@ -75,6 +86,7 @@ def registration():
             session["type"] = "user"
             return redirect(url_for("list", user_name=username))
         except:
+            session["registration"] = "used"
             return redirect(url_for('registration'))
     return render_template('registration.html')
 
@@ -328,4 +340,5 @@ def tag_list():
 
 
 if __name__ == '__main__':
+    session.pop('login', None)
     app.run(debug=True)
