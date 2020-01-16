@@ -9,11 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # return login_as_test()
-    try:
-        print(alma)
-    except:
-        pass
+    return login_as_test()
 
     if request.method == 'POST':
 
@@ -24,7 +20,6 @@ def index():
 
         if len(result_list) != 1:
             session["login"] = "wrong"
-            alma = "alma"
             return redirect('/')
         user_row = result_list[0]
         if not data_manager.verify_password(password, user_row['password']):
@@ -39,7 +34,6 @@ def index():
             session["type"] = "user"
         return redirect(url_for("list"))
     session.pop('registration', None)
-
     session.pop('type', None)
     session.pop('user_name', None)
     questions = data_manager.get_five_question()
@@ -47,8 +41,8 @@ def index():
 
 
 def login_as_test():
-    session["user_name"] = "Admin"
-    session["type"] = "Admin"
+    session["user_name"] = "baba"
+    session["type"] = "user"
     return list()
 
 
@@ -76,6 +70,7 @@ def list():
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
+    session["type"] = "registration"
     if request.method == 'POST':
         username = request.form.get('user_name')
         password = request.form.get("password")
@@ -106,7 +101,6 @@ def my_profile(user_id):
     profile = data_manager.my_profile(name)
     my_questions = data_manager.get_my_questions(name)
     my_answers = data_manager.get_my_answers(name)
-    print(my_answers)
     my_comments = data_manager.get_my_comments(name)
     return render_template("my_profile.html", profile=profile[0], my_questions=my_questions, my_answers=my_answers,
                            my_comments=my_comments)

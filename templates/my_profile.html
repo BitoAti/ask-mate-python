@@ -1,17 +1,28 @@
 {% extends "layout.html" %}
 
 {% block content %}
-{% for user in profile %}
-{{user.name}}
-
-
-{% endfor %}
+<h3>Hello,{{ session["user_name"]}}</h3>
 {% if session["type"] == "Admin" %}
 <h2> <a href="{{ url_for('list_of_users')}}">List of users</a></h2>
 {%  endif   %}
+<p>Here you can see all of your activities</p>
 <h1>My questions</h1>
 {% for user in my_questions %}
-{{user}}
+<table>
+    <thead>
+        <tr>
+            <th><p>Title</p></th>
+            <th><p>Message</p></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><p>{{user.title}}</p></td>
+            <td><p>{{user.message}}</p></td>
+        </tr>
+    </tbody>
+</table>
+{{user. title}}
 {% endfor %}
 <h1>My answers</h1>
 {% for user in my_answers %}
@@ -22,5 +33,20 @@
 {% for user in my_comments %}
 {{user}}
 
+<table>
+    <thead>
+        <tr>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
 {% endfor %}
 {%endblock%}

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<H1>LIST</H1>
+
 {% for line in my_id %}
 {% if session["type"] != "visitor" %}
 <a href="{{ url_for('logout')}}">Log out</a>
@@ -9,6 +9,8 @@
 {% endif %}
 {% endfor %}
 {%    if session["type"] == "visitor": %}
+<a href="/">Back to main page</a>
+
 <p>All question</p>
 {%    elif session["type"] == "user":  %}
 {{user_name}}
@@ -58,12 +60,3 @@
 {% endblock %}
 
 
-
-
-@database_common.connection_handler
-def save_tag(cursor, question_id, tag_id):
-    cursor.execute('''
-                INSERT INTO comment (question_id, tag_id)
-                VALUES %(comment)s
-
-    ''',      {"question_id":question_id, "tag_id":tag_id})

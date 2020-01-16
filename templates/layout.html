@@ -8,8 +8,8 @@
     <div class="header">
 
         <a href="/list" class="logo">AskMate</a>
-        {% if session["type"] != "user" and session["type"] != "visitor" and session["type"] != "Admin" %}
-        {{session["type"]}}
+        {% if session["type"] != "user" and session["type"] != "visitor" and session["type"] != "Admin" and
+        session["type"] != "registration" %}
         <div class="header-right">
             <form action="" method="POST" class="form">
                 User name:
@@ -23,16 +23,16 @@
             <a class="visitor" href="/visitor">Enter without registration</a>
 
         </div>
+
         {% endif %}
+
     </div>
 </head>
 <body>
-<h2>{{session["user_name"]}}</h2>
-{% if session["type"] == "Admin" %}
-<h2>YOU ARE LOGGED ON AS ADMIN</h2>
-{%  endif   %}
+{% if session["user_name"] != none %}
+<h3>Hello, you are logged on as {{session["user_name"]}}</h3>
 
-
+{% endif %}
 
 <div class="content-wrapper">
     {% block content %} {% endblock %}
