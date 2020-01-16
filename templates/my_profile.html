@@ -5,7 +5,7 @@
 <p><a href="{{ url_for('list_of_users')}}">List of users</a><p>
 {%  endif   %}
 <p>Here you can see all of your activities</p>
-<p>My questions</p>
+<p>My questions:</p>
 
 <table>
     <thead>
@@ -24,20 +24,21 @@
     </tbody>
     {% endfor %}
 </table>
-<p>My answers</p>
+<p>My answers:</p>
 
     {% for user in my_answers %}
+        <a href="{{ url_for('display_question', question_id = user.question_id) }}">{{ user.message }}</a>
 
         <p>{{user.message}}</p>
 
     {% endfor %}
 
-<p>My comments</p>
+<p>My comments:</p>
 
     {% for user in my_comments %}
-
-        <p>{{user.message}}</p>
+        <a href="{{ url_for('display_question', question_id = user.question_id) }}">{{ user.message }}</a></br>
 
     {% endfor %}
+    <a href="/list">Back to questions</a>
 
     {% endblock %}

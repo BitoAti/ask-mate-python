@@ -70,7 +70,7 @@ def get_all_question(cursor, column="id", direction="DESC"):
 @database_common.connection_handler
 def add_new_question(cursor, new_question):
     cursor.execute('''
-    INSERT into question(view_number,vote_number,title,message,submission_time,user_name, voted_by) VALUES %(new_question)s
+    INSERT into question(view_number,vote_number,title,message,submission_time,user_name) VALUES %(new_question)s
 
     ''', {"new_question": new_question})
 

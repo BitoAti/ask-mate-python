@@ -119,7 +119,6 @@ def add_question():
         new_question += (request.form.get('message'),)
         new_question += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         new_question += (session["user_name"],)
-        new_question += ("user-",)
         data_manager.add_new_question(new_question)
         tags = request.form.getlist("tag")
         q_id = data_manager.get_max_question_id()
@@ -212,7 +211,9 @@ def question_vote_down(question_id):
 
 @app.route('/display_question/<question_id>/delete_answer/<answer_id>')
 def delete_answer(question_id, answer_id):
-    data_manager.delete_one_answer(int(answer_id))
+    data_manager.delete_all_comment(int(question_id))
+    data_manager.delete_all_answer(int(question_id))
+    data_manager.delete_one_answer(answer_id)
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -253,7 +254,6 @@ def add_comment_to_question(question_id):
         comment += (question_id,)
         comment += (request.form.get("question_comment"),)
         comment += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
-
         comment += (session["user_name"],)
         data_manager.add_question_comment(comment)
         return redirect(url_for("display_question", question_id=question_id))
@@ -329,7 +329,9 @@ def accept_answer(answer_id):
 
 @app.route('/tags')
 def tag_list():
+
     tags = data_manager.count_tags()
+
     return render_template("tags.html", tags=tags)
 
 def reg_vote(question_id):
