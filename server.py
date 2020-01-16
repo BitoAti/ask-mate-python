@@ -9,10 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    session.pop('registration', None)
-    session.pop('type', None)
-    session.pop('user_name', None)
-    # return login_as_test()
+    #return login_as_test()
 
     if request.method == 'POST':
 
@@ -132,7 +129,6 @@ def add_question():
 
 @app.route("/display_question/<question_id>")
 def display_question(question_id):
-    print(session["type"])
     question = data_manager.get_question(question_id)
     answer = data_manager.get_answers(question_id)
     question_comments = data_manager.get_question_comments(question_id)
@@ -299,7 +295,6 @@ def delete_question_comment(comment_id, question_id):
 @app.route('/userlist')
 def list_of_users():
     user_list = data_manager.get_all_user()
-    print(user_list)
     return render_template("list_of_users.html", user_list=user_list)
 
 

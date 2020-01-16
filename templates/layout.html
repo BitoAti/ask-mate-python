@@ -27,16 +27,20 @@
         {% endif %}
 
     </div>
+
+
 </head>
 <body>
-<!--
-{% if session["user_name"] != none %}
+<!--{% if session["user_name"] != none %}
 <h3>Hello, you are logged on as {{session["user_name"]}}</h3>
 
-{% endif %}
--->
+{% endif %}-->
+
 <div class="content-wrapper">
     {% block content %} {% endblock %}
+</div>
+<div class="navbar" id="myNavbar">
+    <p>AskMate</p>
 </div>
 </body>
 </html>
