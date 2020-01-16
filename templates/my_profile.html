@@ -1,52 +1,43 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h3>Hello,{{ session["user_name"]}}</h3>
 {% if session["type"] == "Admin" %}
-<h2> <a href="{{ url_for('list_of_users')}}">List of users</a></h2>
+<p><a href="{{ url_for('list_of_users')}}">List of users</a><p>
 {%  endif   %}
 <p>Here you can see all of your activities</p>
-<h1>My questions</h1>
-{% for user in my_questions %}
-<table>
-    <thead>
-        <tr>
-            <th><p>Title</p></th>
-            <th><p>Message</p></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><p>{{user.title}}</p></td>
-            <td><p>{{user.message}}</p></td>
-        </tr>
-    </tbody>
-</table>
-{{user. title}}
-{% endfor %}
-<h1>My answers</h1>
-{% for user in my_answers %}
-{{user}}
-
-{% endfor %}
-<h1>My comments</h1>
-{% for user in my_comments %}
-{{user}}
+<p>My questions</p>
 
 <table>
     <thead>
-        <tr>
-            <td>
-
-            </td>
-            <td>
-
-            </td>
-        </tr>
+    <tr>
+        <th>Title</th>
+        <th>Message</th>
+    </tr>
     </thead>
+    {% for user in my_questions %}
     <tbody>
+    <tr>
+        <td><a href="{{ url_for('display_question', question_id = user.id) }}">{{ user.title }}</a></td>
 
+        <td>{{user.message}}</td>
+    </tr>
     </tbody>
+    {% endfor %}
 </table>
-{% endfor %}
-{%endblock%}
+<p>My answers</p>
+
+    {% for user in my_answers %}
+
+        <p>{{user.message}}</p>
+
+    {% endfor %}
+
+<p>My comments</p>
+
+    {% for user in my_comments %}
+
+        <p>{{user.message}}</p>
+
+    {% endfor %}
+
+    {% endblock %}

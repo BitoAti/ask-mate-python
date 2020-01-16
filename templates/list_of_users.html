@@ -1,8 +1,27 @@
 {% extends "layout.html" %}
-
 {% block content %}
-{% for user in user_list %}
-{{user}}
+<p>List of users</p>
 
-{%  endfor  %}
+<table>
+    <thead>
+        <tr>
+            <th>User id</th>
+            <th>User name</th>
+            <th>Date of registration</th>
+            <th>Reputation</th>
+        </tr>
+    </thead>
+    {% for user in user_list %}
+    <tbody>
+        <tr>
+            <td>{{user.user_id}}</td>
+            <td>{{user.user_name}}</td>
+            <td>{{user.date_of_registration}}</td>
+            <td>{{user.reputation}}</td>
+        </tr>
+
+    </tbody>
+    {%  endfor  %}
+</table>
+
 {%endblock%}
