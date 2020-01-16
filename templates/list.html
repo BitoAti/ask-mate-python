@@ -8,13 +8,7 @@
 <a href="{{ url_for('my_profile', user_id=line.user_id)}}">My profile</a>
 {% endif %}
 {% endfor %}
-{%    if session["type"] == "visitor": %}
-<a href="/">Back to main page</a>
 
-
-{%    elif session["type"] == "user":  %}
-{{user_name}}
-{% endif %}
 <form action="" method="POST" >
 
     <input type="text" name="search_phrase">
@@ -30,9 +24,9 @@
         <th><a href="{{ url_for('list', order_by = 'vote_number', direction = 'ASC') }}">Vote number</a></th>
         <th><a href="{{ url_for('list', order_by = 'title', direction = 'ASC') }}">Title</a></th>
         <th><a href="{{ url_for('list', order_by = 'message', direction = 'ASC') }}">Message</a></th>
-        <th><a href="{{ url_for('list', order_by = 'user_name', direction = 'ASC') }}">User</a></th>
+        <th><a href="{{ url_for('list', order_by = 'user_name', direction = 'ASC') }}">Asked by:</a></th>
 
-        <th>Image</th>
+
 
     </tr>
     </thead>
@@ -48,7 +42,6 @@
         <td>{{ row.message }} </td>
         <td>{{ row.user_name }} </td>
 
-        <td>{{ row.image }}</td>
     </tr>
     {% endfor %}
     </tbody>
@@ -57,7 +50,11 @@
 
 <a href="{{ url_for('add_question') }}">Add question</a>
 <a href="{{ url_for('tag_list')}}">Tag list</a>
+{%    if session["type"] == "visitor": %}
+<a href="/">Back to main page</a>
 
+
+{% endif %}
 {% endblock %}
 
 

@@ -119,6 +119,7 @@ def add_question():
         new_question += (request.form.get('message'),)
         new_question += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         new_question += (session["user_name"],)
+        new_question += ("user-",)
         data_manager.add_new_question(new_question)
         tags = request.form.getlist("tag")
         q_id = data_manager.get_max_question_id()
@@ -138,6 +139,7 @@ def display_question(question_id):
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_answer_comments(question_id)
     tags = data_manager.get_tags_by_question_id(question_id)
+
     return render_template("display_question.html", question=question, answer=answer,
                            question_comments=question_comments, answer_comments=answer_comments, tags=tags)
 
@@ -327,10 +329,24 @@ def accept_answer(answer_id):
 
 @app.route('/tags')
 def tag_list():
-
     tags = data_manager.count_tags()
-
     return render_template("tags.html", tags=tags)
+
+def reg_vote(question_id):
+    new_voter = session["user_name"]
+    result_str = data_manager.check_question_to_vote(question_id)
+    result = result_str[0]
+    my_str = result["voted_by"]
+    my_str += new_voter + "-"
+    data_manager.reg_question_to_vote(question_id, my_str)
+
+def check_vote(question_id):
+    result_str = data_manager.check_question_to_vote(question_id)
+    result = result_str[0]
+    my_str = result["voted_by"]
+    converted_list = list(my_str.split("-"))
+    print(converted_list)
+
 
 
 if __name__ == '__main__':

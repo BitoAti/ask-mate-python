@@ -70,7 +70,7 @@ def get_all_question(cursor, column="id", direction="DESC"):
 @database_common.connection_handler
 def add_new_question(cursor, new_question):
     cursor.execute('''
-    INSERT into question(view_number,vote_number,title,message,submission_time,user_name) VALUES %(new_question)s
+    INSERT into question(view_number,vote_number,title,message,submission_time,user_name, voted_by) VALUES %(new_question)s
 
     ''', {"new_question": new_question})
 
@@ -507,3 +507,27 @@ def count_tags(cursor):
     ''')
     count_tag = cursor.fetchall()
     return count_tag
+
+
+
+@database_common.connection_handler
+def check_question_to_vote(cursor, question_id):
+    cursor.execute('''
+                    SELECT voted_by FROM question
+                    WHERE id = %(question_id)s
+
+
+    ''', {"question_id": question_id})
+    result = cursor.fetchall()
+    return result
+
+
+@database_common.connection_handler
+def reg_question_to_vote(cursor, question_id, new_str):
+    cursor.execute('''
+                    UPDATE question
+                    SET voted_by = %(new_str)s
+                    WHERE id = %(question_id)s
+
+
+    ''', {"question_id": question_id, "new_str":new_str})
