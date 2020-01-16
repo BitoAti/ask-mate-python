@@ -9,7 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return login_as_test()
+    #return login_as_test()
 
     if request.method == 'POST':
 
@@ -334,5 +334,5 @@ def tag_list():
 
 
 if __name__ == '__main__':
-    session.pop('login', None)
+
     app.run(debug=True)
