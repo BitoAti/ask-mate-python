@@ -90,13 +90,20 @@
 
             {% if item.user_name == session["user_name"] and session["type"] != "visitor" %}
 
-            <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete
-                answer</a></td>
+            <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
+
             <td><a href="{{ url_for('edit_answer',answer_id = item.id) }}">Edit answer</a></td>
+            {% else %}
+            <td><p>Not allowed</p></td>
+            <td><p>Not allowed</p></td>
 
             {% endif %}
+
             {% if session["type"] != "visitor" %}
             <td><a href="{{url_for('add_comment_to_answer', answer_id = item.id)}}">Add comment</a></td>
+            {% else %}
+            <td><p>Not allowed</p></td>
+
             {% endif %}
 
         </tr>

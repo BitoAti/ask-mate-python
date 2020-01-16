@@ -13,7 +13,7 @@
 
         <form action="" method="POST" class="search">
 
-            <input type="search" class="input" placeholder="What are you looking for?" required>
+            <input type="search" name="search_phrase" class="input" placeholder="What are you looking for?" required>
             <button class="butt" type="submit" name="search_phrase"> Search </button>
         </form>
 
@@ -51,8 +51,9 @@
     </tbody>
 </table>
 
-
+{% if session["user_name"] != "visitor" %}
 <a href="{{ url_for('add_question') }}">Add question</a>
+{% endif %}
 <a href="{{ url_for('tag_list')}}">Tag list</a>
 {%    if session["type"] == "visitor": %}
 <a href="/">Back to main page</a>

@@ -4,6 +4,12 @@
 {% if session["type"] == "Admin" %}
 <p><a href="{{ url_for('list_of_users')}}">List of users</a><p>
 {%  endif   %}
+<h3>
+{% for line in profile %}
+
+Your reputation point is: {{line.reputation}}
+{% endfor %}
+</h3>
 <p>Here you can see all of your activities</p>
 <p>My questions:</p>
 

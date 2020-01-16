@@ -1,11 +1,37 @@
 {% extends "layout.html" %}
 
 {% block content %}
-{% for line in questions%}
-<p>{{ line }}</p>
-{% endfor %}
+<h3> RESULT OF YOUR SEARCH</h3>
+
+    <table id="main_table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Submission Time</th>
+            <th>View number</th>
+            <th>Vote number</th>
+            <th>Title</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for line in questions %}
+        <tr>
+            <td>{{ line.id }}</td>
+            <td>{{ line.submission_time }}</td>
+            <td>{{ line.view_number }}</td>
+            <td>{{ line.vote_number }}</td>
+            <td><a href="{{ url_for('display_question', question_id = line.id) }}">{{ line.title }}</a></td>
+            <td>{{ line.message }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
 {% for line in answer %}
-<p>{{ line }}</p>
+<p>{{ line.message }}</p>
 {% endfor %}
 
 <a href=" {{ url_for('list')}} ">Back to questions</a>

@@ -12,32 +12,25 @@ def index():
     #return login_as_test()
     session.pop("user_name", None)
     session.pop("type", None)
-
     session.pop("registration", None)
 
     if request.method == 'POST':
-
         username = request.form.get('user_name')
-
         password = request.form.get("password")
         result_list = data_manager.get_line(username)
-
         if len(result_list) != 1:
             session["login"] = "wrong"
             return redirect('/')
         user_row = result_list[0]
         if not data_manager.verify_password(password, user_row['password']):
             session["login"] = "wrong"
-
             return redirect('/')
-
         session["user_name"] = username
         if username == "Admin":
             session["type"] = "Admin"
         else:
             session["type"] = "user"
         return redirect(url_for("list"))
-
     questions = data_manager.get_five_question()
     return render_template('index.html', question=questions)
 
@@ -59,6 +52,7 @@ def enter_as_visitor():
 def list():
     if request.method == 'POST':
         word_for_search = request.form.get("search_phrase")
+        print(word_for_search)
         return redirect(url_for("result", search_phrase=word_for_search))
     column = request.args.get("order_by")
     direction = request.args.get("direction")
@@ -101,10 +95,11 @@ def logout():
 def my_profile(user_id):
     name = session["user_name"]
     profile = data_manager.my_profile(name)
+
     my_questions = data_manager.get_my_questions(name)
     my_answers = data_manager.get_my_answers(name)
     my_comments = data_manager.get_my_comments(name)
-    return render_template("my_profile.html", profile=profile[0], my_questions=my_questions, my_answers=my_answers,
+    return render_template("my_profile.html", profile=profile, my_questions=my_questions, my_answers=my_answers,
                            my_comments=my_comments)
 
 
@@ -272,7 +267,6 @@ def add_comment_to_answer(answer_id):
         comment += (request.form.get('answer_comment'),)
         comment += (strftime("%Y-%m-%d %H:%M:%S", gmtime()),)
         comment += (session['user_name'],)
-        print(comment)
         data_manager.add_answer_comment(comment)
         return redirect(url_for('display_question', question_id=question_id))
     return render_template("comment_answer.html", answer_id=answer_id, question_id=question_id)
@@ -329,10 +323,9 @@ def accept_answer(answer_id):
 
 @app.route('/tags')
 def tag_list():
-
     tags = data_manager.count_tags()
-
     return render_template("tags.html", tags=tags)
+
 
 def reg_vote(question_id):
     new_voter = session["user_name"]
@@ -342,13 +335,12 @@ def reg_vote(question_id):
     my_str += new_voter + "-"
     data_manager.reg_question_to_vote(question_id, my_str)
 
+
 def check_vote(question_id):
     result_str = data_manager.check_question_to_vote(question_id)
     result = result_str[0]
     my_str = result["voted_by"]
     converted_list = list(my_str.split("-"))
-    print(converted_list)
-
 
 
 if __name__ == '__main__':
