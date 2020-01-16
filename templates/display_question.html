@@ -12,9 +12,9 @@
     <p id="questitle">Title: {{ item.title }}</p>
     <p>Full question: {{ item.message }}</p>
     <h3>Tags:
-    {% for line in tags %}
-    {{line.name}}
-    {% endfor %}
+        {% for line in tags %}
+        {{line.name}}
+        {% endfor %}
     </h3>
     {% if item.user_name != session["user_name"] and session["type"] != "visitor" %}
     <a href="{{ url_for('question_vote_up', question_id = item.id) }}">UP</a>
@@ -54,12 +54,17 @@
             <th>Answer</th>
             <th>Vote number</th>
             <th>Posted at:</th>
+            <th>Vote up</th>
+            <th>Vote Down</th>
+            <th>Accept</th>
+            <th> Add comment</th>
+            <th>Edit answer</th>
+            <th>Delete answer</th>
 
 
         </tr>
         </thead>
         {% for item in answer %}
-
         <tbody>
         <tr>
             <td>{{item.user_name}}</td>
@@ -74,10 +79,16 @@
             <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a>
                 {% if item.accepted < 1 %}
             <td><a href="{{ url_for('accept_answer', answer_id = item.id) }}">Accept answer</a></td>
+                {% else %}
+                <td><p>Not allowed</p></td>
+                {% endif %}
+            {% else %}
+            <td><p>Not allowed</p></td>
+            <td><p>Not allowed</p></td>
             {% endif %}
 
-            </td>
-            {% endif %}
+
+
             {% if item.user_name == session["user_name"] and session["type"] != "visitor" %}
 
             <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete

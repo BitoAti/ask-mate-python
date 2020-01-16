@@ -10,6 +10,10 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #return login_as_test()
+    session.pop("user_name", None)
+    session.pop("type", None)
+
+    session.pop("registration", None)
 
     if request.method == 'POST':
 
@@ -215,22 +219,20 @@ def answer_vote_up(answer_id):
     result = data_manager.get_question_id(answer_id)
     res = result[0]
     question_id = res["question_id"]
-    print()
     value = 10
     reputation_by_answer_id(value, answer_id)
     data_manager.answer_vote_up(answer_id)
-
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/answer/<answer_id>/vote_down')
 def answer_vote_down(answer_id):
-    data_manager.answer_vote_down(answer_id)
     result = data_manager.get_question_id(answer_id)
     res = result[0]
     question_id = res["question_id"]
     value = -2
-    reputation_by_answer_id(value, question_id)
+    reputation_by_answer_id(value, answer_id)
+    data_manager.answer_vote_down(answer_id)
     return redirect(url_for('display_question', question_id=question_id))
 
 
