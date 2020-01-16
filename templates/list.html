@@ -8,21 +8,20 @@
 <a href="{{ url_for('my_profile', user_id=line.user_id)}}">My profile</a>
 {% endif %}
 {% endfor %}
-{%    if session["type"] == "visitor": %}
-<a href="/">Back to main page</a>
 
 
-{%    elif session["type"] == "user":  %}
-{{user_name}}
-{% endif %}
-<form action="" method="POST" >
 
-    <input type="text" name="search_phrase">
-    <button type="submit" name="search_phrase">Search</button>
-</form>
-<p>All question</p>
-<table>
-    <thead>
+
+        <form action="" method="POST" class="search">
+
+            <input type="search" class="input" placeholder="What are you looking for?" required>
+            <button class="butt" type="submit" name="search_phrase"> Search </button>
+        </form>
+
+
+
+<table class="table">
+    <thead class="head">
     <tr>
         <th><a href="{{ url_for('list', order_by = 'id', direction = 'ASC') }}">Id</a></th>
         <th><a href="{{ url_for('list', order_by = 'submission_time', direction = 'ASC') }}">Submission time</a></th>
@@ -57,6 +56,13 @@
 
 <a href="{{ url_for('add_question') }}">Add question</a>
 <a href="{{ url_for('tag_list')}}">Tag list</a>
+{%    if session["type"] == "visitor": %}
+<a class="back" href="/">Back to main page</a>
+
+
+{%    elif session["type"] == "user":  %}
+{{user_name}}
+{% endif %}
 
 {% endblock %}
 

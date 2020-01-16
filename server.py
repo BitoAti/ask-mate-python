@@ -10,7 +10,9 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #return login_as_test()
-
+    session.pop('registration', None)
+    session.pop('username', None)
+    session.pop('type', None)
     if request.method == 'POST':
 
         username = request.form.get('user_name')
