@@ -9,7 +9,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    #return login_as_test()
+    # return login_as_test()
     session.pop("user_name", None)
     session.pop("type", None)
     session.pop("registration", None)
@@ -52,7 +52,6 @@ def enter_as_visitor():
 def list():
     if request.method == 'POST':
         word_for_search = request.form.get("search_phrase")
-        print(word_for_search)
         return redirect(url_for("result", search_phrase=word_for_search))
     column = request.args.get("order_by")
     direction = request.args.get("direction")
@@ -126,6 +125,12 @@ def add_question():
     return render_template("add_question.html", tags=tags)
 
 
+@app.route("/display_question_vote_up/<question_id>")
+def display_question_vote_up(question_id):
+    data_manager.view_number(question_id)
+    return redirect(url_for('display_question', question_id=question_id))
+
+
 @app.route("/display_question/<question_id>")
 def display_question(question_id):
     question = data_manager.get_question(question_id)
@@ -133,7 +138,8 @@ def display_question(question_id):
     question_comments = data_manager.get_question_comments(question_id)
     answer_comments = data_manager.get_answer_comments(question_id)
     tags = data_manager.get_tags_by_question_id(question_id)
-
+    print(question_comments)
+    print(session["user_name"])
     return render_template("display_question.html", question=question, answer=answer,
                            question_comments=question_comments, answer_comments=answer_comments, tags=tags)
 
@@ -293,7 +299,9 @@ def delete_question_comment(comment_id, question_id):
 @app.route('/userlist')
 def list_of_users():
     user_list = data_manager.get_all_user()
-    return render_template("list_of_users.html", user_list=user_list)
+    user_name = data_manager.get_user_id(session["user_name"])
+
+    return render_template("list_of_users.html", user_list=user_list, user_name=user_name)
 
 
 def reputation_by_question_id(value, question_id):

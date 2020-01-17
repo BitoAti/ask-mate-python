@@ -5,17 +5,17 @@
 
 <table>
     <thead>
-        <tr>
-            <th>Tag</th>
-            <th>Time of used</th>
-        </tr>
+    <tr>
+        <th>Tag</th>
+        <th>Time of used</th>
+    </tr>
     </thead>
     {% for tag in tags %}
     <tbody>
-        <tr>
-            <td>{{tag.name}}</td>
-            <td>{{tag.count}}</td>
-        </tr>
+    <tr>
+        <td>{{tag.name}}</td>
+        <td>{{tag.count}}</td>
+    </tr>
     </tbody>
     {% endfor %}
 </table>

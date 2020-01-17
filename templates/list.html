@@ -10,13 +10,11 @@
 {% endfor %}
 
 
+<form action="" method="POST" class="search">
 
-        <form action="" method="POST" class="search">
-
-            <input type="search" name="search_phrase" class="input" placeholder="What are you looking for?" required>
-            <button class="butt" type="submit" name="search_phrase"> Search </button>
-        </form>
-
+    <input type="search" name="search_phrase" class="input" placeholder="What are you looking for?" required>
+    <button class="butt" type="submit" name="search_phrase"> Search</button>
+</form>
 
 
 <table class="table">
@@ -31,7 +29,6 @@
         <th><a href="{{ url_for('list', order_by = 'user_name', direction = 'ASC') }}">Asked by:</a></th>
 
 
-
     </tr>
     </thead>
     <tbody>
@@ -41,10 +38,10 @@
         <td>{{ row.submission_time }}</td>
         <td>{{ row.view_number }}</td>
         <td>{{ row.vote_number }}</td>
-        <td><a href="{{ url_for('display_question', question_id = row.id) }}">{{ row.title }}</a></td>
+        <td><a href="{{ url_for('display_question_vote_up', question_id = row.id) }}">{{ row.title }}</a></td>
 
-        <td>{{ row.message }} </td>
-        <td>{{ row.user_name }} </td>
+        <td>{{ row.message }}</td>
+        <td>{{ row.user_name }}</td>
 
     </tr>
     {% endfor %}

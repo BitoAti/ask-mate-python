@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <form action="" method="POST" class="form">
-        <p>User name</p>
+<form action="" method="POST" class="form">
+    <p>User name</p>
 
-        <label for="user_name"></label><input name="user_name" id="user_name" required>
-        <p>Password</p>
-        <label for="password"></label><input type='password' name="password" id="password" required>
+    <label for="user_name"></label><input name="user_name" id="user_name" required>
+    <p>Password</p>
+    <label for="password"></label><input type='password' name="password" id="password" required>
 
-        <button class="button" type="submit">Registration</button>
-        {% if session["registration"] == "used" %}
-        <p> Username already used, please choose something else </p>
-        {% endif %}
-        <a href="/">Back to main page</a>
+    <button class="button" type="submit">Registration</button>
+    {% if session["registration"] == "used" %}
+    <p> Username already used, please choose something else </p>
+    {% endif %}
+    <a href="/">Back to main page</a>
 
-{% endblock %}
+    {% endblock %}

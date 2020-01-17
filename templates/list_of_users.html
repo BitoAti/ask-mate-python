@@ -4,24 +4,25 @@
 
 <table>
     <thead>
-        <tr>
-            <th>User id</th>
-            <th>User name</th>
-            <th>Date of registration</th>
-            <th>Reputation</th>
-        </tr>
+    <tr>
+        <th>User id</th>
+        <th>User name</th>
+        <th>Date of registration</th>
+        <th>Reputation</th>
+    </tr>
     </thead>
     {% for user in user_list %}
     <tbody>
-        <tr>
-            <td>{{user.user_id}}</td>
-            <td>{{user.user_name}}</td>
-            <td>{{user.date_of_registration}}</td>
-            <td>{{user.reputation}}</td>
-        </tr>
+    <tr>
+        <td>{{user.user_id}}</td>
+        <td>{{user.user_name}}</td>
+        <td>{{user.date_of_registration}}</td>
+        <td>{{user.reputation}}</td>
+    </tr>
 
     </tbody>
-    {%  endfor  %}
+    {% endfor %}
 </table>
+<a href="{{url_for('list', user_id=user_id)}}" ,>Back to questions</a>
 
 {%endblock%}

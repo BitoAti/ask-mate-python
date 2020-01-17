@@ -8,9 +8,10 @@
 {% for item in question %}
 
 <div class="qstion">
-    <p>Person who ask: {{item.user_name}}</p>
+    <h2>Person who ask: {{item.user_name}}</h2>
     <p id="questitle">Title: {{ item.title }}</p>
-    <p>Full question: {{ item.message }}</p>
+    <h2>Full question: </h2>
+    <p>{{ item.message }}</p>
     <h3>Tags:
         {% for line in tags %}
         {{line.name}}
@@ -21,19 +22,18 @@
     <a href="{{ url_for('question_vote_down', question_id = item.id) }}">DOWN</a>
     {% endif %}
 
-    <p>Vote number: {{ item.vote_number }}
-        | Posted: {{ item.submission_time }}</p>
+    <p>Vote number: {{ item.vote_number }} | Posted: {{ item.submission_time }} | View number: {{item.view_number}}</p>
 </div>
 {% endfor %}
+<h2>Comments:</h2>
 {% for item in question_comments %}
-{% if item.answer_id == None %}
-<p>{{item.user_name}}'s comment: {{item.message}}</p>
-{% if item.user_name == session["user_name"] %}
+    {% if item.answer_id == None %}
+    <p>{{item.user_name}}'s comment: {{item.message}}</p>
 
-<td><a href="{{ url_for('delete_question_comment', comment_id = item.id, question_id = item.question_id) }}">Delete
-    comment</a></td>
-<td><a href="{{ url_for('edit_question_comment',comment_id = item.id) }}">Edit comment</a></td>
-{% endif %}
+        {% if item.user_name == session["user_name"] %}
+        <a href="{{ url_for('delete_question_comment', comment_id = item.id, question_id = item.question_id) }}">Delete comment</a>
+        <a href="{{ url_for('edit_question_comment',comment_id = item.id) }}">Edit comment</a>
+        {% endif %}
 {% endif %}
 {%endfor%}
 
@@ -55,10 +55,10 @@
             <th>Posted at:</th>
             <th>Vote up</th>
             <th>Vote Down</th>
-            <th>Accept</th>
-            <th> Add comment</th>
-            <th>Edit answer</th>
             <th>Delete answer</th>
+            <th>Edit answer</th>
+            <th> Add comment</th>
+            <th>Accept</th>
 
 
         </tr>
@@ -70,53 +70,50 @@
             <td>{{ item.message }}</td>
             <td>{{ item.vote_number }}</td>
             <td>{{ item.submission_time }}</td>
-            {% if item.user_name != session["user_name"] and session["type"] != "visitor"%}
 
+            {% if item.user_name != session["user_name"] and session["type"] != "visitor" %}
             <td><a href="{{ url_for('answer_vote_up', question_id = item.question_id, answer_id = item.id) }}">Vote
                 up</a></td>
-
             <td><a href="{{ url_for('answer_vote_down', question_id = item.question_id, answer_id = item.id) }}">Vote_down</a>
-                {% if item.accepted < 1 %}
-            <td><a href="{{ url_for('accept_answer', answer_id = item.id) }}">Accept answer</a></td>
                 {% else %}
-                <td><p>Not allowed</p></td>
-                {% endif %}
-            {% else %}
             <td><p>Not allowed</p></td>
             <td><p>Not allowed</p></td>
             {% endif %}
 
 
-
             {% if item.user_name == session["user_name"] and session["type"] != "visitor" %}
-
-            <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete answer</a></td>
-
+            <td><a href="{{ url_for('delete_answer', question_id = item.question_id, answer_id = item.id) }}">Delete
+                answer</a></td>
             <td><a href="{{ url_for('edit_answer',answer_id = item.id) }}">Edit answer</a></td>
             {% else %}
             <td><p>Not allowed</p></td>
             <td><p>Not allowed</p></td>
-
             {% endif %}
 
             {% if session["type"] != "visitor" %}
             <td><a href="{{url_for('add_comment_to_answer', answer_id = item.id)}}">Add comment</a></td>
             {% else %}
             <td><p>Not allowed</p></td>
-
             {% endif %}
+                {% for line in question %}
+                    {% if line.user_name == session["user_name"] %}
+            <td><a href="{{ url_for('accept_answer', answer_id = item.id) }}">Accept answer</a></td>
 
+            {% else %}
+
+            <td><p>Not allowed</p></td>
+            {% endif %}
+            {% endfor %}
         </tr>
 
         {% for line in answer_comments %}
         {% if item.id == line.answer_id %}
         <tr>
-            <td>{{item.user_name}}'s comment: {{ line.message }}</td>
+            <td>{{line.user_name}}'s comment:</td>
+            <td>{{ line.message }}</td>
         </tr>
         {% endif %}
         {% endfor %}
-
-
         {% endfor %}
         </tbody>
     </table>

@@ -85,6 +85,7 @@ def get_user_id(cursor, user_name):
     user_id = cursor.fetchall()
     return user_id
 
+
 @database_common.connection_handler
 def get_user_name_by_question_id(cursor, question_id):
     cursor.execute('''
@@ -288,7 +289,7 @@ def get_one_comment(cursor, comment_id):
                     SELECT * FROM comment
                     WHERE id = %(comment_id)s
     
-    ''',    {"comment_id":comment_id})
+    ''', {"comment_id": comment_id})
     comment = cursor.fetchall()
     return comment
 
@@ -299,10 +300,9 @@ def get_question_comments(cursor, question_id):
                     SELECT * FROM comment
                     WHERE question_id = %(question_id)s
 
-    ''',    {"question_id":question_id})
+    ''', {"question_id": question_id})
     comment = cursor.fetchall()
     return comment
-
 
 
 @database_common.connection_handler
@@ -311,7 +311,7 @@ def get_answer_comments(cursor, answer_id):
                     SELECT * FROM comment
                     WHERE question_id = %(answer_id)s
 
-    ''',       {"answer_id":answer_id})
+    ''', {"answer_id": answer_id})
     comment = cursor.fetchall()
     return comment
 
@@ -324,8 +324,7 @@ def delete_question_comments(cursor, comment_id):
   
                 
 
-    ''',     {"comment_id":comment_id})
-
+    ''', {"comment_id": comment_id})
 
 
 @database_common.connection_handler
@@ -338,15 +337,14 @@ def edit_question_comments(cursor, comment_id):
     return comment
 
 
-
 @database_common.connection_handler
 def edit_comment(cursor, new_comment, comment_id):
-        cursor.execute('''
+    cursor.execute('''
         UPDATE comment
         SET message = %(new_comment)s
         WHERE id= %(comment_id)s
         ''',
-                       {"new_comment": new_comment, "comment_id": comment_id})
+                   {"new_comment": new_comment, "comment_id": comment_id})
 
 
 @database_common.connection_handler
@@ -371,15 +369,12 @@ def get_all_user(cursor):
     return users
 
 
-
-
-
 @database_common.connection_handler
 def get_my_questions(cursor, name):
     cursor.execute('''
                     SELECT * FROM question
                     WHERE user_name = %(name)s
-    ''',     {"name": name})
+    ''', {"name": name})
     my_data = cursor.fetchall()
     return my_data
 
@@ -389,7 +384,7 @@ def get_my_answers(cursor, name):
     cursor.execute('''
                     SELECT * FROM answer
                     WHERE user_name = %(name)s
-    ''',     {"name": name})
+    ''', {"name": name})
     my_data = cursor.fetchall()
     return my_data
 
@@ -409,7 +404,7 @@ def add_answer_comment(cursor, comment):
     cursor.execute('''
                 INSERT INTO comment (question_id, answer_id, message, submission_time, user_name)
                 VALUES %(comment)s
-    ''', {'comment':comment})
+    ''', {'comment': comment})
 
 
 @database_common.connection_handler
@@ -421,17 +416,15 @@ def delete_all_comment(cursor, question_id):
                    {"question_id": question_id})
 
 
-
-
 @database_common.connection_handler
-def reputation_handler(cursor,user_name, value):
+def reputation_handler(cursor, user_name, value):
     cursor.execute('''
                     UPDATE users
                     SET reputation = reputation + %(value)s
                     WHERE user_name = %(user_name)s
     
     
-    ''', {"user_name":user_name, "value":value})
+    ''', {"user_name": user_name, "value": value})
 
 
 @database_common.connection_handler
@@ -442,9 +435,7 @@ def set_answered(cursor, answer_id):
                     WHERE id = %(answer_id)s
 
 
-    ''', {"answer_id":answer_id})
-
-
+    ''', {"answer_id": answer_id})
 
 
 @database_common.connection_handler
@@ -453,7 +444,7 @@ def save_tag(cursor, new_tag):
                 INSERT INTO question_tag (question_id, tag_id)
                 VALUES %(new_tag)s
     
-    ''',      {"new_tag":new_tag})
+    ''', {"new_tag": new_tag})
 
 
 @database_common.connection_handler
@@ -483,7 +474,7 @@ def get_tags_by_question_id(cursor, question_id):
                     ON question_tag.tag_id = tag.id
                     WHERE question_id = %(question_id)s
 
-    ''',    {"question_id":question_id})
+    ''', {"question_id": question_id})
     tags = cursor.fetchall()
     return tags
 
@@ -496,6 +487,7 @@ def delete_tags(cursor, question_id):
     ''',
                    {"question_id": question_id})
 
+
 @database_common.connection_handler
 def count_tags(cursor):
     cursor.execute('''
@@ -507,7 +499,6 @@ def count_tags(cursor):
     ''')
     count_tag = cursor.fetchall()
     return count_tag
-
 
 
 @database_common.connection_handler
@@ -530,4 +521,14 @@ def reg_question_to_vote(cursor, question_id, new_str):
                     WHERE id = %(question_id)s
 
 
-    ''', {"question_id": question_id, "new_str":new_str})
+    ''', {"question_id": question_id, "new_str": new_str})
+
+
+@database_common.connection_handler
+def view_number(cursor, question_id):
+    cursor.execute('''
+                    UPDATE question
+                    SET view_number = view_number + 1
+                    WHERE id = %(question_id)s
+                    
+    ''', {"question_id": question_id})
